@@ -1,6 +1,8 @@
 
-# Formuario
+# Formulario
 El siguiente es una descripcion del formulario de decalracion de renta de la DIAN.
+
+![alt text](image0.png)
 
 ## Seccion 1. Pregunta(s) inicial(es)
 
