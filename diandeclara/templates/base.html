@@ -23,6 +23,9 @@
           integrity="sha512-SbiR/eusphKoMVVXysTKG/7VseWii+Y3FdHrt0EpKgpToZeemhqHeZeLWLhJutz/2ut2Vw1uQEj2MbRF+TVBUA=="
           crossorigin="anonymous"
           referrerpolicy="no-referrer" />
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" 
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 <!-- Your stuff: Third-party CSS libraries go here -->
 <!-- This file stores project-specific CSS -->
 
@@ -38,13 +41,39 @@
 {# Placed at the top of the document so pages load faster with defer #}
 {% block javascript %}
 
+<!-- Bootstrap JS Bundle (includes Popper) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" 
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" 
+        crossorigin="anonymous"></script>
 
-<!-- Bootstrap JS -->
-<script defer
-        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.min.js"
-        integrity="sha512-1/RvZTcCDEUjY/CypiMz+iqqtaoQfAITmNSJY17Myp4Ms5mdxPS5UV7iOfdZoxcGhzFbOm6sntTKJppjvuhg4g=="
-        crossorigin="anonymous"
-        referrerpolicy="no-referrer"></script>
+<!-- Global Tooltip Initialization -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize all tooltips globally
+  try {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl, {
+        trigger: 'hover focus',
+        placement: 'auto',
+        html: true,
+        delay: { show: 500, hide: 100 }
+      });
+    });
+    
+    // Also initialize popovers if any
+    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+    var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+      return new bootstrap.Popover(popoverTriggerEl);
+    });
+    
+    console.log('Bootstrap components initialized - Tooltips:', tooltipList.length, 'Popovers:', popoverList.length);
+  } catch (error) {
+    console.error('Error initializing Bootstrap components:', error);
+  }
+});
+</script>
+
 <!-- Your stuff: Third-party javascript libraries go here -->
 
 
@@ -60,7 +89,7 @@
 </head>
 <body class="{% block bodyclass %}{% endblock bodyclass %}">
   {% block body %}
-  <div class="mb-1">
+  {% comment %} <div class="mb-1">
     <nav class="navbar navbar-expand-md navbar-light bg-light">
       <div class="container-fluid">
         <button class="navbar-toggler navbar-toggler-right"
@@ -106,7 +135,7 @@
         </div>
       </div>
     </nav>
-  </div>
+  </div> {% endcomment %}
   <div class="container">
     {% if messages %}
       {% for message in messages %}
@@ -125,9 +154,143 @@
       {% endblock content %}
     {% endblock main %}
 
+    <!-- Asistente Virtual Flotante -->
+    {% if user.is_authenticated %}
+    <div id="virtual-assistant">
+      <!-- Botón flotante del asistente -->
+      <div id="assistant-btn" class="assistant-floating-btn">
+        <img src="{% static 'images/bot.gif' %}" alt="Asistente Virtual" class="bot-image">
+        <div class="pulse-ring"></div>
+      </div>
+
+      <!-- Modal del asistente -->
+      <div id="assistant-modal" class="assistant-modal">
+        <div class="assistant-modal-content">
+          <div class="assistant-header">
+            <h5><i class="bi bi-robot"></i> Asistente Virtual DIAN</h5>
+            <button id="close-assistant" class="btn-close"></button>
+          </div>
+          
+          <div class="assistant-body">
+            <div id="assistant-options" class="assistant-options">
+              <div class="welcome-message">
+                <p>¡Hola! Soy tu asistente virtual. ¿En qué puedo ayudarte hoy?</p>
+              </div>
+              
+              <div class="option-buttons">
+                <button id="screen-share-btn" class="option-btn">
+                  <i class="bi bi-display"></i>
+                  <span>Compartir Pantalla</span>
+                  <small>Comparte tu pantalla para recibir ayuda visual</small>
+                </button>
+                
+                <button id="chat-btn" class="option-btn">
+                  <i class="bi bi-chat-dots"></i>
+                  <span>Chat de Texto</span>
+                  <small>Haz preguntas por texto</small>
+                </button>
+                
+                <button id="voice-btn" class="option-btn">
+                  <i class="bi bi-mic"></i>
+                  <span>Asistente de Voz</span>
+                  <small>Habla conmigo, te responderé por texto</small>
+                </button>
+              </div>
+            </div>
+
+            <!-- Pantalla de Chat -->
+            <div id="chat-interface" class="chat-interface" style="display: none;">
+              <div class="chat-messages" id="chat-messages">
+                <div class="bot-message">
+                  <i class="bi bi-robot"></i>
+                  <span>¡Hola! Puedes preguntarme sobre declaraciones de renta, formularios, pagos y más.</span>
+                </div>
+              </div>
+              <div class="chat-input-area">
+                <input type="text" id="chat-input" placeholder="Escribe tu pregunta..." class="form-control">
+                <button id="send-message" class="btn btn-primary">
+                  <i class="bi bi-send"></i>
+                </button>
+              </div>
+              <button id="back-to-options" class="btn btn-secondary btn-sm mt-2">Volver al menú</button>
+            </div>
+
+            <!-- Pantalla de Voz -->
+            <div id="voice-interface" class="voice-interface" style="display: none;">
+              <div class="voice-status">
+                <div id="voice-indicator" class="voice-indicator">
+                  <i class="bi bi-mic-mute"></i>
+                </div>
+                <p id="voice-status-text">Presiona el botón para hablar</p>
+              </div>
+              <div class="voice-messages" id="voice-messages">
+                <div class="bot-message">
+                  <i class="bi bi-robot"></i>
+                  <span>Presiona el micrófono y habla. Te escucharé y responderé por texto.</span>
+                </div>
+              </div>
+              <div class="voice-controls">
+                <button id="start-recording" class="btn btn-primary">
+                  <i class="bi bi-mic"></i> Hablar
+                </button>
+                <button id="stop-recording" class="btn btn-danger" style="display: none;">
+                  <i class="bi bi-stop"></i> Detener
+                </button>
+              </div>
+              <button id="back-to-options-voice" class="btn btn-secondary btn-sm mt-2">Volver al menú</button>
+            </div>
+
+            <!-- Pantalla de Compartir Pantalla -->
+            <div id="screen-share-interface" class="screen-share-interface" style="display: none;">
+              <div class="screen-share-status">
+                <i class="bi bi-display"></i>
+                <h6>Compartir Pantalla</h6>
+                <p id="screen-status-text">Comparte tu pantalla para recibir ayuda visual personalizada</p>
+              </div>
+              <div class="screen-share-controls">
+                <button id="start-screen-share" class="btn btn-success">
+                  <i class="bi bi-camera-video"></i> Iniciar Captura
+                </button>
+                <button id="stop-screen-share" class="btn btn-danger" style="display: none;">
+                  <i class="bi bi-camera-video-off"></i> Detener Captura
+                </button>
+              </div>
+              <div id="screen-preview" class="screen-preview" style="display: none;">
+                <video id="screen-video" autoplay muted></video>
+              </div>
+              
+              <!-- Chat integrado para compartir pantalla -->
+              <div id="screen-chat" class="screen-chat" style="display: none;">
+                <div class="screen-chat-header">
+                  <i class="bi bi-eye-fill text-success me-2"></i>
+                  <span class="text-success fw-bold">Viendo tu pantalla</span>
+                </div>
+                <div class="screen-chat-messages" id="screen-chat-messages">
+                  <div class="bot-message">
+                    <i class="bi bi-robot"></i>
+                    <span>¡Perfecto! Ya puedo ver tu pantalla. Puedes hacerme preguntas sobre lo que estás viendo y te ayudaré basándome en el contenido.</span>
+                  </div>
+                </div>
+                <div class="screen-chat-input-area">
+                  <input type="text" id="screen-chat-input" placeholder="Pregúntame sobre lo que ves en pantalla..." class="form-control">
+                  <button id="send-screen-message" class="btn btn-primary">
+                    <i class="bi bi-send"></i>
+                  </button>
+                </div>
+              </div>
+              
+              <button id="back-to-options-screen" class="btn btn-secondary btn-sm mt-2">Volver al menú</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
   </div>
   {% endblock body %}
   <!-- /container -->
+  
   {% block modal %}
   {% endblock modal %}
   {% block inline_javascript %}

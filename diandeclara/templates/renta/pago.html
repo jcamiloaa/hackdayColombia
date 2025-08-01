@@ -1,0 +1,243 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid bg-light min-vh-100">
+  <!-- Header DIAN Style -->
+  <div class="bg-primary text-white py-2">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+          <span class="fw-bold">GOV.CO</span>
+          <span class="ms-3">Pago Electrónico</span>
+        </div>
+        <div class="text-end small">
+          <div>A nombre propio</div>
+          <div>{{ user.first_name }} {{ user.last_name }}</div>
+          <div>{{ "now"|date:"d/m/Y | H:i:s" }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Breadcrumb y Progress -->
+  <div class="container py-3">
+    <div class="row">
+      <div class="col-12">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">← Declaración de renta personas naturales</a></li>
+            <li class="breadcrumb-item active">Pago de declaración</li>
+          </ol>
+        </nav>
+        
+        <!-- Progress Steps -->
+        <div class="d-flex justify-content-center mb-4">
+          <div class="d-flex align-items-center">
+            <div class="step-circle completed">1</div>
+            <div class="step-line completed"></div>
+            <div class="step-circle completed">2</div>
+            <div class="step-line completed"></div>
+            <div class="step-circle completed">3</div>
+            <div class="step-line completed"></div>
+            <div class="step-circle completed">4</div>
+            <div class="step-line completed"></div>
+            <div class="step-circle active">5</div>
+          </div>
+        </div>
+        <div class="d-flex justify-content-center mb-4 small">
+          <span class="text-muted me-4">Pregunta(s) inicial(es)</span>
+          <span class="text-muted me-4">Formulario 210</span>
+          <span class="text-muted me-4">Firmar</span>
+          <span class="text-muted me-4">Presentar</span>
+          <span class="text-success fw-bold">Pagar</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8">
+        <div class="card shadow-sm">
+          <div class="card-header bg-success text-white">
+            <h4 class="mb-0"><i class="bi bi-credit-card"></i> Pago Electrónico</h4>
+            <p class="mb-0">Complete el pago de su declaración de renta</p>
+          </div>
+          <div class="card-body">
+            
+            <!-- Resumen del pago -->
+            <div class="alert alert-success" role="alert">
+              <h5><i class="bi bi-check-circle"></i> Declaración presentada exitosamente</h5>
+              <p class="mb-0">Su declaración ha sido presentada. Ahora debe proceder con el pago.</p>
+            </div>
+
+            <div class="row mb-4">
+              <div class="col-md-6">
+                <h6>Datos de la declaración:</h6>
+                <ul class="list-unstyled">
+                  <li><strong>NIT:</strong> {{ declaracion.nit }}-{{ declaracion.dv }}</li>
+                  <li><strong>Formulario:</strong> 210</li>
+                  <li><strong>Año gravable:</strong> 2024</li>
+                  <li><strong>Fecha presentación:</strong> {{ declaracion.fecha_presentacion|date:"d/m/Y H:i" }}</li>
+                </ul>
+              </div>
+              <div class="col-md-6">
+                <div class="card bg-danger bg-opacity-10">
+                  <div class="card-body text-center">
+                    <h6 class="text-danger">Valor a pagar</h6>
+                    <h2 class="text-danger fw-bold">${{ declaracion.saldo_a_pagar|floatformat:0 }}</h2>
+                    <small class="text-muted">Incluye intereses de mora hasta la fecha</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Métodos de pago -->
+            <h6 class="mb-3">Seleccione el método de pago:</h6>
+            <form method="post" id="pagoForm">{% csrf_token %}
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <div class="card h-100">
+                    <div class="card-body text-center">
+                      <i class="bi bi-bank display-4 text-primary"></i>
+                      <h6 class="mt-2">Pago en línea</h6>
+                      <p class="small text-muted">PSE - Débito a cuenta corriente o ahorros</p>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="metodo_pago" value="pse" id="pse" required>
+                        <label class="form-check-label" for="pse">
+                          Pagar con PSE
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="card h-100">
+                    <div class="card-body text-center">
+                      <i class="bi bi-credit-card display-4 text-success"></i>
+                      <h6 class="mt-2">Tarjeta de crédito</h6>
+                      <p class="small text-muted">Visa, MasterCard, American Express</p>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="metodo_pago" value="tarjeta" id="tarjeta" required>
+                        <label class="form-check-label" for="tarjeta">
+                          Pagar con tarjeta
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Información de recaudo -->
+              <div class="alert alert-info" role="alert">
+                <h6><i class="bi bi-info-circle"></i> Información importante</h6>
+                <ul class="mb-0 small">
+                  <li>El pago se procesa inmediatamente y recibirá confirmación por email</li>
+                  <li>Conserve el comprobante de pago para sus registros</li>
+                  <li>Una vez realizado el pago, podrá descargar su declaración en PDF</li>
+                </ul>
+              </div>
+
+              <div class="d-flex justify-content-between">
+                <a href="{% url 'renta:resumen' %}" class="btn btn-outline-secondary">
+                  <i class="bi bi-chevron-left"></i> Volver al resumen
+                </a>
+                <button type="submit" class="btn btn-success btn-lg" id="pagarBtn" disabled>
+                  <i class="bi bi-credit-card"></i> Proceder al pago
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Sidebar Info -->
+      <div class="col-lg-4">
+        <div class="card bg-info bg-opacity-10 mb-3">
+          <div class="card-body">
+            <h6>Nro. de formulario: <strong>2118672580726</strong></h6>
+            <p class="mb-1"><strong>Estado:</strong> <span class="badge bg-warning">Presentada - Pendiente pago</span></p>
+            <p class="mb-0"><strong>Fecha límite pago:</strong> 31 de octubre de 2025</p>
+          </div>
+        </div>
+        
+        <div class="card bg-warning bg-opacity-10 mb-3">
+          <div class="card-body">
+            <h6 class="text-warning"><i class="bi bi-exclamation-triangle"></i> Recuerde</h6>
+            <p class="mb-0 small">El pago debe realizarse antes de la fecha límite para evitar intereses de mora</p>
+          </div>
+        </div>
+        
+        <div class="card bg-success bg-opacity-10">
+          <div class="card-body">
+            <h6 class="text-success"><i class="bi bi-shield-check"></i> Pago seguro</h6>
+            <p class="mb-0 small">Transacción protegida con encriptación SSL</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.step-circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #e9ecef;
+  color: #6c757d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+}
+.step-circle.active {
+  background-color: #198754;
+  color: white;
+}
+.step-circle.completed {
+  background-color: #0d6efd;
+  color: white;
+}
+.step-line {
+  width: 60px;
+  height: 2px;
+  background-color: #e9ecef;
+}
+.step-line.completed {
+  background-color: #0d6efd;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('pagoForm');
+  const pagarBtn = document.getElementById('pagarBtn');
+  const radioButtons = document.querySelectorAll('input[name="metodo_pago"]');
+  
+  // Enable payment button when method is selected
+  radioButtons.forEach(function(radio) {
+    radio.addEventListener('change', function() {
+      pagarBtn.disabled = false;
+      pagarBtn.classList.remove('btn-outline-success');
+      pagarBtn.classList.add('btn-success');
+    });
+  });
+  
+  // Form submission
+  form.addEventListener('submit', function(e) {
+    const selectedMethod = document.querySelector('input[name="metodo_pago"]:checked');
+    if (!selectedMethod) {
+      e.preventDefault();
+      alert('Por favor seleccione un método de pago.');
+      return;
+    }
+    
+    // Simulate payment processing
+    pagarBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Procesando pago...';
+    pagarBtn.disabled = true;
+  });
+});
+</script>
+{% endblock %}

@@ -1,6 +1,58 @@
 {% extends "base.html" %}
+{% load i18n %}
 
-{% block main %}
-  {% block content %}
-  {% endblock content %}
-{% endblock main %}
+{% block body %}
+  <!-- Header GOV.CO exacto como en DIAN -->
+  <div style="background-color: #4472C4;" class="text-white py-1">
+    <div class="container-fluid px-3">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+          <span class="fw-bold" style="font-size: 0.85rem;">🌐 GOV.CO</span>
+          <span class="ms-3" style="font-size: 0.85rem;">Dirección de Impuestos y Aduanas Nacionales</span>
+        </div>
+        <div class="text-end small">
+          <a href="{% url 'home' %}" class="text-white text-decoration-none">Volver al inicio</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header DIAN con logo -->
+  <div class="bg-white py-3 border-bottom">
+    <div class="container-fluid px-3">
+      <div class="d-flex align-items-center">
+        <img src="https://www.dian.gov.co/imagenes/Escudo_Colombia.png" 
+             alt="Escudo Colombia" 
+             style="height: 50px; width: auto;" 
+             class="me-3">
+        <div>
+          <h1 class="h2 fw-bold mb-0" style="color: #1f4e79; font-size: 2.5rem; letter-spacing: 0.1em;">DIAN</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenido de gestión de cuenta -->
+  <div class="bg-light min-vh-100 py-4">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="card shadow border-0">
+            <div class="card-header bg-primary text-white py-3">
+              <h4 class="mb-0">{% block header_title %}Gestión de Cuenta{% endblock header_title %}</h4>
+            </div>
+            <div class="card-body p-4">
+              {% block content %}
+              {% endblock content %}
+            </div>
+            <div class="card-footer text-center py-3 bg-light">
+              <small class="text-muted">
+                Sistema oficial DIAN - Dirección de Impuestos y Aduanas Nacionales
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock body %}

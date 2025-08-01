@@ -1,0 +1,381 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid bg-light min-vh-100">
+  <!-- Header DIAN Style -->
+  <div class="bg-primary text-white py-2">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+          <span class="fw-bold">GOV.CO</span>
+          <span class="ms-3">Formulario 210</span>
+        </div>
+        <div class="text-end small">
+          <div>A nombre propio</div>
+          <div>{{ user.first_name }} {{ user.last_name }}</div>
+          <div>{{ "now"|date:"d/m/Y | H:i:s" }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Breadcrumb y Progress -->
+  <div class="container py-3">
+    <div class="row">
+      <div class="col-12">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">← Declaración de renta personas naturales</a></li>
+            <li class="breadcrumb-item active">Haga su declaración de renta</li>
+          </ol>
+        </nav>
+        
+        <!-- Progress Steps -->
+        <div class="d-flex justify-content-center mb-4">
+          <div class="d-flex align-items-center">
+            <div class="step-circle completed">1</div>
+            <div class="step-line completed"></div>
+            <div class="step-circle active">2</div>
+            <div class="step-line"></div>
+            <div class="step-circle">3</div>
+            <div class="step-line"></div>
+            <div class="step-circle">4</div>
+            <div class="step-line"></div>
+            <div class="step-circle">5</div>
+          </div>
+        </div>
+        <div class="d-flex justify-content-center mb-4 small">
+          <span class="text-muted me-4">Pregunta(s) inicial(es)</span>
+          <span class="text-success fw-bold me-4">Formulario 210</span>
+          <span class="text-muted me-4">Firmar</span>
+          <span class="text-muted me-4">Presentar</span>
+          <span class="text-muted">Pagar</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-9">
+        <div class="card shadow-sm">
+          <div class="card-header bg-white border-bottom">
+            <h4 class="mb-0">1. Datos Declarante</h4>
+            <p class="text-muted mb-0">Los datos de las casillas 5, 6, 7, 8, 9, 10, 12 y 24 corresponden a la información registrada en la hoja principal de su RUT.</p>
+          </div>
+          <div class="card-body">
+            <form method="post" id="formulario210">{% csrf_token %}
+              
+              <!-- Datos Personales -->
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <div class="d-flex align-items-center mb-2">
+                      <label class="form-label fw-bold mb-0">5. Número de Identificación Tributaria (NIT)</label>
+                      <button type="button" class="btn btn-outline-info btn-sm ms-2" data-bs-toggle="tooltip" title="Ingrese su NIT sin puntos ni espacios">
+                        <i class="bi bi-info-circle"></i>
+                      </button>
+                    </div>
+                    <input type="text" name="nit" class="form-control" value="{{ declaracion.nit }}" required maxlength="15" placeholder="Ej: 1102820592">
+                  </div>
+                </div>
+                
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <div class="d-flex align-items-center mb-2">
+                      <label class="form-label fw-bold mb-0">6. DV</label>
+                      <button type="button" class="btn btn-outline-info btn-sm ms-2" data-bs-toggle="tooltip" title="Dígito de verificación del NIT">
+                        <i class="bi bi-info-circle"></i>
+                      </button>
+                    </div>
+                    <input type="text" name="dv" class="form-control" value="{{ declaracion.dv }}" required maxlength="1" placeholder="8">
+                  </div>
+                </div>
+              </div>
+              
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <div class="d-flex align-items-center mb-2">
+                      <label class="form-label fw-bold mb-0">7. Primer apellido</label>
+                      <button type="button" class="btn btn-outline-info btn-sm ms-2" data-bs-toggle="tooltip" title="Ingrese su primer apellido como aparece en su documento de identidad">
+                        <i class="bi bi-info-circle"></i>
+                      </button>
+                    </div>
+                    <input type="text" name="primer_apellido" class="form-control" value="{{ declaracion.primer_apellido }}" required>
+                  </div>
+                </div>
+                
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <div class="d-flex align-items-center mb-2">
+                      <label class="form-label fw-bold mb-0">8. Segundo apellido</label>
+                      <button type="button" class="btn btn-outline-info btn-sm ms-2" data-bs-toggle="tooltip" title="Ingrese su segundo apellido si aplica">
+                        <i class="bi bi-info-circle"></i>
+                      </button>
+                    </div>
+                    <input type="text" name="segundo_apellido" class="form-control" value="{{ declaracion.segundo_apellido }}">
+                  </div>
+                </div>
+              </div>
+              
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <div class="d-flex align-items-center mb-2">
+                      <label class="form-label fw-bold mb-0">9. Primer nombre</label>
+                      <button type="button" class="btn btn-outline-info btn-sm ms-2" data-bs-toggle="tooltip" title="Ingrese su primer nombre como aparece en su documento de identidad">
+                        <i class="bi bi-info-circle"></i>
+                      </button>
+                    </div>
+                    <input type="text" name="primer_nombre" class="form-control" value="{{ declaracion.primer_nombre }}" required>
+                  </div>
+                </div>
+                
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <div class="d-flex align-items-center mb-2">
+                      <label class="form-label fw-bold mb-0">10. Otros nombres</label>
+                      <button type="button" class="btn btn-outline-info btn-sm ms-2" data-bs-toggle="tooltip" title="Ingrese sus otros nombres si los tiene">
+                        <i class="bi bi-info-circle"></i>
+                      </button>
+                    </div>
+                    <input type="text" name="otros_nombres" class="form-control" value="{{ declaracion.otros_nombres }}">
+                  </div>
+                </div>
+              </div>
+              
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <div class="d-flex align-items-center mb-2">
+                      <label class="form-label fw-bold mb-0">286. Género</label>
+                      <button type="button" class="btn btn-outline-info btn-sm ms-2" data-bs-toggle="tooltip" title="Seleccione su género">
+                        <i class="bi bi-info-circle"></i>
+                      </button>
+                    </div>
+                    <select name="genero" class="form-select" required>
+                      <option value="">Seleccione</option>
+                      <option value="Masculino" {% if declaracion.genero == 'Masculino' %}selected{% endif %}>Masculino</option>
+                      <option value="Femenino" {% if declaracion.genero == 'Femenino' %}selected{% endif %}>Femenino</option>
+                      <option value="No binario" {% if declaracion.genero == 'No binario' %}selected{% endif %}>No binario</option>
+                      <option value="Otro" {% if declaracion.genero == 'Otro' %}selected{% endif %}>Otro</option>
+                      <option value="No responde" {% if declaracion.genero == 'No responde' %}selected{% endif %}>No responde</option>
+                    </select>
+                  </div>
+                </div>
+                
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <div class="d-flex align-items-center mb-2">
+                      <label class="form-label fw-bold mb-0">12. Cód. Dirección Seccional</label>
+                      <button type="button" class="btn btn-outline-info btn-sm ms-2" data-bs-toggle="tooltip" title="Código de la dirección seccional según su ubicación">
+                        <i class="bi bi-info-circle"></i>
+                      </button>
+                    </div>
+                    <input type="text" name="direccion_seccional" class="form-control" value="{{ declaracion.direccion_seccional }}" required>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Información Financiera -->
+              <h5 class="mt-4 mb-3 text-primary">Información Patrimonial y de Ingresos</h5>
+              
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <div class="d-flex align-items-center mb-2">
+                      <label class="form-label fw-bold mb-0">29. Patrimonio bruto</label>
+                      <button type="button" class="btn btn-outline-info btn-sm ms-2" data-bs-toggle="tooltip" title="Valor total de sus bienes y derechos apreciables en dinero">
+                        <i class="bi bi-info-circle"></i>
+                      </button>
+                    </div>
+                    <input type="number" name="patrimonio_bruto" class="form-control" value="{{ declaracion.patrimonio_bruto }}" min="0" step="0.01">
+                  </div>
+                </div>
+                
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <div class="d-flex align-items-center mb-2">
+                      <label class="form-label fw-bold mb-0">30. Deudas</label>
+                      <button type="button" class="btn btn-outline-info btn-sm ms-2" data-bs-toggle="tooltip" title="Valor total de sus obligaciones claras, expresas y exigibles">
+                        <i class="bi bi-info-circle"></i>
+                      </button>
+                    </div>
+                    <input type="number" name="deudas" class="form-control" value="{{ declaracion.deudas }}" min="0" step="0.01">
+                  </div>
+                </div>
+              </div>
+              
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <div class="d-flex align-items-center mb-2">
+                      <label class="form-label fw-bold mb-0">32. Ingresos brutos</label>
+                      <button type="button" class="btn btn-outline-info btn-sm ms-2" data-bs-toggle="tooltip" title="Total de ingresos obtenidos durante el año gravable">
+                        <i class="bi bi-info-circle"></i>
+                      </button>
+                    </div>
+                    <input type="number" name="ingresos_brutos" class="form-control" value="{{ declaracion.ingresos_brutos }}" min="0" step="0.01">
+                  </div>
+                </div>
+                
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <div class="d-flex align-items-center mb-2">
+                      <label class="form-label fw-bold mb-0">39. Deducciones</label>
+                      <button type="button" class="btn btn-outline-info btn-sm ms-2" data-bs-toggle="tooltip" title="Valor de las deducciones procedentes según la ley">
+                        <i class="bi bi-info-circle"></i>
+                      </button>
+                    </div>
+                    <input type="number" name="deducciones" class="form-control" value="{{ declaracion.deducciones }}" min="0" step="0.01">
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Campos calculados -->
+              <h5 class="mt-4 mb-3 text-info">Campos Calculados Automáticamente</h5>
+              
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="form-label fw-bold">Renta líquida</label>
+                    <input type="number" class="form-control bg-light" value="{{ declaracion.renta_liquida }}" readonly>
+                  </div>
+                </div>
+                
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="form-label fw-bold">Impuesto calculado</label>
+                    <input type="number" class="form-control bg-light" value="{{ declaracion.impuesto_calculado }}" readonly>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="d-flex justify-content-end mt-4">
+                <button type="submit" class="btn btn-success px-4">Guardar y ver resumen</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Sidebar Info -->
+      <div class="col-lg-3">
+        <div class="card bg-info bg-opacity-10 mb-3">
+          <div class="card-body">
+            <h6>Nro. de formulario: <strong>2118672580726</strong></h6>
+            <p class="mb-1"><strong>Año:</strong> 2024</p>
+            <p class="mb-1"><strong>Periodicidad:</strong> anual</p>
+            <p class="mb-1"><strong>Periodo:</strong> 1</p>
+            <p class="mb-1"><strong>Concepto:</strong> inicial</p>
+            <p class="mb-0"><strong>Estado:</strong> Borrador</p>
+          </div>
+        </div>
+        
+        <div class="card bg-info bg-opacity-10">
+          <div class="card-body">
+            <h6 class="text-info"><i class="bi bi-lightbulb"></i> Ayuda</h6>
+            <p class="mb-0 small">Conozca todo el material que hemos diseñado para facilitar su trámite <a href="#" class="text-info">aquí</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.step-circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #e9ecef;
+  color: #6c757d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+}
+.step-circle.active {
+  background-color: #198754;
+  color: white;
+}
+.step-circle.completed {
+  background-color: #0d6efd;
+  color: white;
+}
+.step-line {
+  width: 60px;
+  height: 2px;
+  background-color: #e9ecef;
+}
+.step-line.completed {
+  background-color: #0d6efd;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize tooltips with better error handling
+  try {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl, {
+        trigger: 'hover focus',
+        placement: 'top',
+        html: true
+      });
+    });
+    console.log('Tooltips initialized successfully:', tooltipList.length);
+  } catch (error) {
+    console.error('Error initializing tooltips:', error);
+  }
+  
+  // Form validation
+  document.getElementById('formulario210').addEventListener('submit', function(e) {
+    const requiredFields = ['nit', 'dv', 'primer_apellido', 'primer_nombre', 'genero', 'direccion_seccional'];
+    let isValid = true;
+    let firstInvalidField = null;
+    
+    requiredFields.forEach(function(fieldName) {
+      const field = document.querySelector(`[name="${fieldName}"]`);
+      if (!field.value.trim()) {
+        isValid = false;
+        field.classList.add('is-invalid');
+        if (!firstInvalidField) {
+          firstInvalidField = field;
+        }
+      } else {
+        field.classList.remove('is-invalid');
+      }
+    });
+    
+    if (!isValid) {
+      e.preventDefault();
+      alert('Por favor complete todos los campos obligatorios.');
+      if (firstInvalidField) {
+        firstInvalidField.focus();
+      }
+    }
+  });
+  
+  // Real-time field validation
+  const requiredFields = ['nit', 'dv', 'primer_apellido', 'primer_nombre', 'genero', 'direccion_seccional'];
+  requiredFields.forEach(function(fieldName) {
+    const field = document.querySelector(`[name="${fieldName}"]`);
+    if (field) {
+      field.addEventListener('blur', function() {
+        if (this.value.trim()) {
+          this.classList.remove('is-invalid');
+          this.classList.add('is-valid');
+        } else {
+          this.classList.add('is-invalid');
+          this.classList.remove('is-valid');
+        }
+      });
+    }
+  });
+});
+</script>
+{% endblock %}

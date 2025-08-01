@@ -1,0 +1,117 @@
+{% extends "allauth/layouts/entrance.html" %}
+{% load i18n %}
+{% load allauth account %}
+
+{% block head_title %}{% trans "Sign Up" %}{% endblock head_title %}
+
+{% block header_title %}
+  Registro de Usuario
+{% endblock header_title %}
+
+{% block content %}
+  <div class="text-center mb-4">
+    <h4 class="fw-bold text-primary">Crear Nueva Cuenta</h4>
+    <p class="text-muted">Complete el formulario para registrarse en el sistema de declaración de renta</p>
+  </div>
+
+  {% setvar link %}
+    <a href="{{ login_url }}" class="text-decoration-none">
+  {% endsetvar %}
+  {% setvar end_link %}
+    </a>
+  {% endsetvar %}
+  
+  <p class="text-center mb-4">
+    {% blocktranslate %}¿Ya tiene una cuenta? {{ link }}Inicie sesión aquí{{ end_link }}{% endblocktranslate %}
+  </p>
+
+  {% url 'account_signup' as action_url %}
+  {% element form form=form method="post" action=action_url tags="entrance,signup" %}
+    {% slot body %}
+      {% csrf_token %}
+      
+      <!-- Email field -->
+      <div class="mb-3">
+        <label for="{{ form.email.id_for_label }}" class="form-label fw-bold">
+          <i class="bi bi-envelope me-2"></i>{{ form.email.label }}
+        </label>
+        <input type="email" 
+               name="{{ form.email.name }}" 
+               class="form-control form-control-lg" 
+               id="{{ form.email.id_for_label }}"
+               placeholder="ejemplo@correo.com"
+               {% if form.email.value %}value="{{ form.email.value }}"{% endif %}
+               required>
+        {% if form.email.errors %}
+          <div class="text-danger small mt-1">{{ form.email.errors }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Username field (if exists) -->
+      {% if form.username %}
+        <div class="mb-3">
+          <label for="{{ form.username.id_for_label }}" class="form-label fw-bold">
+            <i class="bi bi-person me-2"></i>{{ form.username.label }}
+          </label>
+          <input type="text" 
+                 name="{{ form.username.name }}" 
+                 class="form-control form-control-lg" 
+                 id="{{ form.username.id_for_label }}"
+                 placeholder="Nombre de usuario"
+                 {% if form.username.value %}value="{{ form.username.value }}"{% endif %}
+                 required>
+          {% if form.username.errors %}
+            <div class="text-danger small mt-1">{{ form.username.errors }}</div>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      <!-- Password1 field -->
+      <div class="mb-3">
+        <label for="{{ form.password1.id_for_label }}" class="form-label fw-bold">
+          <i class="bi bi-lock me-2"></i>{{ form.password1.label }}
+        </label>
+        <input type="password" 
+               name="{{ form.password1.name }}" 
+               class="form-control form-control-lg" 
+               id="{{ form.password1.id_for_label }}"
+               placeholder="Contraseña segura"
+               required>
+        {% if form.password1.errors %}
+          <div class="text-danger small mt-1">{{ form.password1.errors }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Password2 field -->
+      <div class="mb-3">
+        <label for="{{ form.password2.id_for_label }}" class="form-label fw-bold">
+          <i class="bi bi-lock-fill me-2"></i>{{ form.password2.label }}
+        </label>
+        <input type="password" 
+               name="{{ form.password2.name }}" 
+               class="form-control form-control-lg" 
+               id="{{ form.password2.id_for_label }}"
+               placeholder="Confirme su contraseña"
+               required>
+        {% if form.password2.errors %}
+          <div class="text-danger small mt-1">{{ form.password2.errors }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Submit button -->
+      <div class="d-grid gap-2 mb-3">
+        <button type="submit" class="btn btn-success btn-lg">
+          <i class="bi bi-person-plus me-2"></i>{% trans "Sign Up" %}
+        </button>
+      </div>
+
+      <!-- Terms notice -->
+      <div class="text-center">
+        <small class="text-muted">
+          Al registrarse, acepta los términos y condiciones del sistema DIAN
+        </small>
+      </div>
+    {% endslot %}
+  {% endelement %}
+
+{% endblock content %}

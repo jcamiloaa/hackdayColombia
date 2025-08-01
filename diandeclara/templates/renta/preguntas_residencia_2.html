@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid bg-light min-vh-100">
+  <!-- Header DIAN Style -->
+  <div class="bg-primary text-white py-2">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+          <span class="fw-bold">GOV.CO</span>
+          <span class="ms-3">Formulario 210</span>
+        </div>
+        <div class="text-end small">
+          <div>A nombre propio</div>
+          <div>{{ user.first_name }} {{ user.last_name }}</div>
+          <div>{{ "now"|date:"d/m/Y | H:i:s" }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Breadcrumb y Progress -->
+  <div class="container py-3">
+    <div class="row">
+      <div class="col-12">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">← Declaración de renta personas naturales</a></li>
+            <li class="breadcrumb-item active">Haga su declaración de renta</li>
+          </ol>
+        </nav>
+        
+        <!-- Progress Steps -->
+        <div class="d-flex justify-content-center mb-4">
+          <div class="d-flex align-items-center">
+            <div class="step-circle active">1</div>
+            <div class="step-line"></div>
+            <div class="step-circle">2</div>
+            <div class="step-line"></div>
+            <div class="step-circle">3</div>
+            <div class="step-line"></div>
+            <div class="step-circle">4</div>
+            <div class="step-line"></div>
+            <div class="step-circle">5</div>
+          </div>
+        </div>
+        <div class="d-flex justify-content-center mb-4 small">
+          <span class="text-success fw-bold me-4">Pregunta(s) inicial(es)</span>
+          <span class="text-muted me-4">Formulario 210</span>
+          <span class="text-muted me-4">Firmar</span>
+          <span class="text-muted me-4">Presentar</span>
+          <span class="text-muted">Pagar</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="card shadow-sm">
+          <div class="card-header bg-white border-bottom">
+            <h4 class="mb-0">Pregunta(s) inicial(es)</h4>
+            <p class="text-muted mb-0">Continuando con la determinación de su residencia fiscal.</p>
+          </div>
+          <div class="card-body">
+            <form method="post" id="residenciaForm2">{% csrf_token %}
+              <input type="hidden" name="paso" value="2">
+              
+              <div class="mb-4">
+                <div class="d-flex align-items-center mb-3">
+                  <label class="form-label fw-bold mb-0">¿Completó un periodo de permanencia continua o discontinua en Colombia de más de 183 días, durante cualquier período de 365 días calendario iniciado en 2022 y finalizado en 2024?</label>
+                  <button type="button" class="btn btn-outline-info btn-sm ms-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Esta pregunta evalúa el criterio de permanencia extendida según la normativa tributaria colombiana">
+                    <i class="bi bi-info-circle"></i>
+                  </button>
+                </div>
+                
+                <div class="form-check mb-2">
+                  <input class="form-check-input" type="radio" name="residencia_365" id="si" value="si" required>
+                  <label class="form-check-label" for="si">Sí</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="residencia_365" id="no" value="no">
+                  <label class="form-check-label" for="no">No</label>
+                </div>
+              </div>
+              
+              <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-success px-4">Siguiente</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        
+        <!-- Ayuda Panel -->
+        <div class="card mt-3 bg-info bg-opacity-10">
+          <div class="card-body">
+            <h6 class="text-info"><i class="bi bi-lightbulb"></i> Ayuda</h6>
+            <p class="mb-0 small">Conozca todo el material que hemos diseñado para facilitar su trámite <a href="#" class="text-info">aquí</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.step-circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #e9ecef;
+  color: #6c757d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+}
+.step-circle.active {
+  background-color: #198754;
+  color: white;
+}
+.step-line {
+  width: 60px;
+  height: 2px;
+  background-color: #e9ecef;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize tooltips
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl);
+  });
+  
+  // Form validation
+  document.getElementById('residenciaForm2').addEventListener('submit', function(e) {
+    const radioButtons = document.querySelectorAll('input[name="residencia_365"]');
+    let isChecked = false;
+    
+    radioButtons.forEach(function(radio) {
+      if (radio.checked) {
+        isChecked = true;
+      }
+    });
+    
+    if (!isChecked) {
+      e.preventDefault();
+      alert('Por favor seleccione una opción antes de continuar.');
+    }
+  });
+});
+</script>
+{% endblock %}

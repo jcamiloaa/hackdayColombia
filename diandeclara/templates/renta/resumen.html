@@ -1,0 +1,266 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid bg-light min-vh-100">
+  <!-- Header DIAN Style -->
+  <div class="bg-primary text-white py-2">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+          <span class="fw-bold">GOV.CO</span>
+          <span class="ms-3">Resumen de Declaración</span>
+        </div>
+        <div class="text-end small">
+          <div>A nombre propio</div>
+          <div>{{ user.first_name }} {{ user.last_name }}</div>
+          <div>{{ "now"|date:"d/m/Y | H:i:s" }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Breadcrumb y Progress -->
+  <div class="container py-3">
+    <div class="row">
+      <div class="col-12">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">← Declaración de renta personas naturales</a></li>
+            <li class="breadcrumb-item active">Haga su declaración de renta</li>
+          </ol>
+        </nav>
+        
+        <!-- Progress Steps -->
+        <div class="d-flex justify-content-center mb-4">
+          <div class="d-flex align-items-center">
+            <div class="step-circle completed">1</div>
+            <div class="step-line completed"></div>
+            <div class="step-circle completed">2</div>
+            <div class="step-line completed"></div>
+            <div class="step-circle active">3</div>
+            <div class="step-line"></div>
+            <div class="step-circle">4</div>
+            <div class="step-line"></div>
+            <div class="step-circle">5</div>
+          </div>
+        </div>
+        <div class="d-flex justify-content-center mb-4 small">
+          <span class="text-muted me-4">Pregunta(s) inicial(es)</span>
+          <span class="text-muted me-4">Formulario 210</span>
+          <span class="text-success fw-bold me-4">Firmar</span>
+          <span class="text-muted me-4">Presentar</span>
+          <span class="text-muted">Pagar</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-9">
+        <div class="card shadow-sm">
+          <div class="card-header bg-white border-bottom">
+            <h4 class="mb-0">Resumen de su Declaración de Renta 2024</h4>
+            <p class="text-muted mb-0">Revise cuidadosamente toda la información antes de presentar su declaración.</p>
+          </div>
+          <div class="card-body">
+            
+            <!-- Datos del Declarante -->
+            <div class="mb-4">
+              <h5 class="text-primary mb-3">Datos del Declarante</h5>
+              <div class="row">
+                <div class="col-md-6">
+                  <table class="table table-sm">
+                    <tr><th class="bg-light">NIT:</th><td>{{ declaracion.nit }}-{{ declaracion.dv }}</td></tr>
+                    <tr><th class="bg-light">Nombre completo:</th><td>{{ declaracion.primer_nombre }} {{ declaracion.otros_nombres }} {{ declaracion.primer_apellido }} {{ declaracion.segundo_apellido }}</td></tr>
+                    <tr><th class="bg-light">Género:</th><td>{{ declaracion.genero }}</td></tr>
+                  </table>
+                </div>
+                <div class="col-md-6">
+                  <table class="table table-sm">
+                    <tr><th class="bg-light">Dirección seccional:</th><td>{{ declaracion.direccion_seccional }}</td></tr>
+                    <tr><th class="bg-light">Actividad económica:</th><td>{{ declaracion.actividad_economica|default:"No especificada" }}</td></tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Información Patrimonial -->
+            <div class="mb-4">
+              <h5 class="text-primary mb-3">Información Patrimonial</h5>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="card bg-success bg-opacity-10 mb-3">
+                    <div class="card-body text-center">
+                      <h6 class="text-success">Patrimonio Bruto</h6>
+                      <h4 class="text-success">${{ declaracion.patrimonio_bruto|floatformat:0 }}</h4>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="card bg-danger bg-opacity-10 mb-3">
+                    <div class="card-body text-center">
+                      <h6 class="text-danger">Deudas</h6>
+                      <h4 class="text-danger">${{ declaracion.deudas|floatformat:0 }}</h4>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card bg-info bg-opacity-10">
+                <div class="card-body text-center">
+                  <h6 class="text-info">Patrimonio Líquido</h6>
+                  <h4 class="text-info">${{ declaracion.patrimonio_bruto|add:declaracion.deudas|floatformat:0 }}</h4>
+                </div>
+              </div>
+            </div>
+
+            <!-- Información de Ingresos -->
+            <div class="mb-4">
+              <h5 class="text-primary mb-3">Información de Ingresos y Deducciones</h5>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="card bg-primary bg-opacity-10 mb-3">
+                    <div class="card-body text-center">
+                      <h6 class="text-primary">Ingresos Brutos</h6>
+                      <h4 class="text-primary">${{ declaracion.ingresos_brutos|floatformat:0 }}</h4>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="card bg-warning bg-opacity-10 mb-3">
+                    <div class="card-body text-center">
+                      <h6 class="text-warning">Deducciones</h6>
+                      <h4 class="text-warning">${{ declaracion.deducciones|floatformat:0 }}</h4>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card bg-info bg-opacity-10">
+                <div class="card-body text-center">
+                  <h6 class="text-info">Renta Líquida</h6>
+                  <h4 class="text-info">${{ declaracion.renta_liquida|floatformat:0 }}</h4>
+                </div>
+              </div>
+            </div>
+
+            <!-- Cálculo del Impuesto -->
+            <div class="mb-4">
+              <h5 class="text-primary mb-3">Cálculo del Impuesto</h5>
+              <div class="card border-primary">
+                <div class="card-body">
+                  <div class="row text-center">
+                    <div class="col-md-4">
+                      <div class="border-end">
+                        <h6 class="text-muted">Impuesto Calculado</h6>
+                        <h4 class="text-dark">${{ declaracion.impuesto_calculado|floatformat:0 }}</h4>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="border-end">
+                        <h6 class="text-muted">Retenciones y Anticipos</h6>
+                        <h4 class="text-dark">$0</h4>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <h6 class="text-success">Saldo a Pagar</h6>
+                      <h3 class="text-success fw-bold">${{ declaracion.saldo_a_pagar|floatformat:0 }}</h3>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Botón de acción -->
+            <div class="alert alert-warning" role="alert">
+              <h6><i class="bi bi-exclamation-triangle"></i> Importante</h6>
+              <p class="mb-0">Al presionar "Presentar declaración", se generará su declaración oficial y deberá proceder al pago si existe saldo a pagar.</p>
+            </div>
+
+            <form method="post" id="presentarForm">{% csrf_token %}
+              <div class="d-flex justify-content-between">
+                <a href="{% url 'renta:formulario_210' %}" class="btn btn-outline-secondary">
+                  <i class="bi bi-chevron-left"></i> Editar declaración
+                </a>
+                <button type="submit" class="btn btn-success btn-lg" id="presentarBtn">
+                  <i class="bi bi-file-earmark-check"></i> Presentar declaración y proceder a pago
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Sidebar Info -->
+      <div class="col-lg-3">
+        <div class="card bg-info bg-opacity-10 mb-3">
+          <div class="card-body">
+            <h6>Nro. de formulario: <strong>2118672580726</strong></h6>
+            <p class="mb-1"><strong>Año:</strong> 2024</p>
+            <p class="mb-1"><strong>Periodicidad:</strong> anual</p>
+            <p class="mb-1"><strong>Periodo:</strong> 1</p>
+            <p class="mb-1"><strong>Concepto:</strong> inicial</p>
+            <p class="mb-0"><strong>Estado:</strong> Borrador</p>
+          </div>
+        </div>
+        
+        <div class="card bg-warning bg-opacity-10 mb-3">
+          <div class="card-body">
+            <h6 class="text-warning"><i class="bi bi-clock"></i> Fecha límite</h6>
+            <p class="mb-0 small">Su declaración debe presentarse antes del <strong>31 de octubre de 2025</strong></p>
+          </div>
+        </div>
+        
+        <div class="card bg-success bg-opacity-10">
+          <div class="card-body">
+            <h6 class="text-success"><i class="bi bi-shield-check"></i> Seguridad</h6>
+            <p class="mb-0 small">Sus datos están protegidos con encriptación SSL de 256 bits</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.step-circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #e9ecef;
+  color: #6c757d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+}
+.step-circle.active {
+  background-color: #198754;
+  color: white;
+}
+.step-circle.completed {
+  background-color: #0d6efd;
+  color: white;
+}
+.step-line {
+  width: 60px;
+  height: 2px;
+  background-color: #e9ecef;
+}
+.step-line.completed {
+  background-color: #0d6efd;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Form submission confirmation
+  document.getElementById('presentarForm').addEventListener('submit', function(e) {
+    const confirmacion = confirm('¿Está seguro que desea presentar su declaración de renta? Una vez presentada no podrá realizar cambios.');
+    if (!confirmacion) {
+      e.preventDefault();
+    }
+  });
+});
+</script>
+{% endblock %}

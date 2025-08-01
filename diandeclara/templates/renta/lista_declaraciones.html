@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid bg-light min-vh-100">
+  <!-- Header DIAN Style -->
+  <div class="bg-primary text-white py-2">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+          <span class="fw-bold">GOV.CO</span>
+          <span class="ms-3">Mis Declaraciones</span>
+        </div>
+        <div class="text-end small">
+          <div>A nombre propio</div>
+          <div>{{ user.first_name }} {{ user.last_name }}</div>
+          <div>{{ "now"|date:"d/m/Y | H:i:s" }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Breadcrumb -->
+  <div class="container py-3">
+    <div class="row">
+      <div class="col-12">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">← Declaración de renta personas naturales</a></li>
+            <li class="breadcrumb-item active">Mis declaraciones</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="card shadow-sm">
+          <div class="card-header bg-white border-bottom">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h4 class="mb-0">Mis Declaraciones de Renta</h4>
+                <p class="text-muted mb-0">Histórico de declaraciones presentadas</p>
+              </div>
+              <a href="{% url 'renta:inicio' %}" class="btn btn-success">
+                <i class="bi bi-plus-circle"></i> Nueva declaración
+              </a>
+            </div>
+          </div>
+          <div class="card-body">
+            
+            {% if declaraciones %}
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead class="table-light">
+                  <tr>
+                    <th>Año</th>
+                    <th>Formulario</th>
+                    <th>NIT</th>
+                    <th>Fecha Presentación</th>
+                    <th>Estado</th>
+                    <th>Saldo</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for declaracion in declaraciones %}
+                  <tr>
+                    <td><strong>2024</strong></td>
+                    <td>
+                      <span class="badge bg-primary">{{ declaracion.formulario_tipo|default:"210" }}</span>
+                    </td>
+                    <td>{{ declaracion.nit }}-{{ declaracion.dv }}</td>
+                    <td>
+                      {% if declaracion.fecha_presentacion %}
+                        {{ declaracion.fecha_presentacion|date:"d/m/Y H:i" }}
+                      {% else %}
+                        {{ declaracion.fecha_creacion|date:"d/m/Y H:i" }}
+                      {% endif %}
+                    </td>
+                    <td>
+                      {% if declaracion.estado == 'presentada' %}
+                        <span class="badge bg-warning">Presentada</span>
+                      {% elif declaracion.estado == 'pagada' %}
+                        <span class="badge bg-success">Pagada</span>
+                      {% else %}
+                        <span class="badge bg-secondary">{{ declaracion.get_estado_display }}</span>
+                      {% endif %}
+                    </td>
+                    <td>
+                      {% if declaracion.saldo_a_pagar > 0 %}
+                        <span class="text-danger">${{ declaracion.saldo_a_pagar|floatformat:0 }}</span>
+                      {% elif declaracion.saldo_a_favor > 0 %}
+                        <span class="text-success">+${{ declaracion.saldo_a_favor|floatformat:0 }}</span>
+                      {% else %}
+                        <span class="text-muted">$0</span>
+                      {% endif %}
+                    </td>
+                    <td>
+                      <div class="btn-group" role="group">
+                        <a href="{% url 'renta:descargar_pdf' declaracion.id %}" 
+                           class="btn btn-outline-danger btn-sm" 
+                           data-bs-toggle="tooltip" 
+                           title="Descargar declaración en PDF">
+                          <i class="bi bi-file-earmark-pdf"></i>
+                        </a>
+                        {% if declaracion.estado == 'pagada' %}
+                          {% with declaracion.pago as pago %}
+                            {% if pago %}
+                            <a href="{% url 'renta:descargar_comprobante' pago.id %}" 
+                               class="btn btn-outline-info btn-sm"
+                               data-bs-toggle="tooltip" 
+                               title="Descargar comprobante de pago">
+                              <i class="bi bi-receipt"></i>
+                            </a>
+                            {% endif %}
+                          {% endwith %}
+                        {% endif %}
+                        {% if declaracion.estado == 'presentada' %}
+                          <a href="{% url 'renta:pago' %}" 
+                             class="btn btn-outline-success btn-sm"
+                             data-bs-toggle="tooltip" 
+                             title="Proceder al pago">
+                            <i class="bi bi-credit-card"></i>
+                          </a>
+                        {% endif %}
+                      </div>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+              <i class="bi bi-file-earmark-text display-1 text-muted"></i>
+              <h5 class="mt-3 text-muted">No tienes declaraciones presentadas</h5>
+              <p class="text-muted">Cuando presentes tu primera declaración, aparecerá aquí.</p>
+              <a href="{% url 'renta:inicio' %}" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Hacer mi primera declaración
+              </a>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+        
+        <!-- Información adicional -->
+        <div class="row mt-4">
+          <div class="col-md-4">
+            <div class="card bg-info bg-opacity-10">
+              <div class="card-body">
+                <h6 class="text-info"><i class="bi bi-info-circle"></i> Información</h6>
+                <p class="mb-0 small">Las declaraciones se conservan por 5 años según la normativa tributaria.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card bg-warning bg-opacity-10">
+              <div class="card-body">
+                <h6 class="text-warning"><i class="bi bi-calendar-check"></i> Fechas límite</h6>
+                <p class="mb-0 small">Recuerde las fechas límite para presentación y pago de declaraciones.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card bg-success bg-opacity-10">
+              <div class="card-body">
+                <h6 class="text-success"><i class="bi bi-shield-check"></i> Soporte</h6>
+                <p class="mb-0 small">¿Necesita ayuda? Consulte nuestras <a href="#" class="text-success">guías y tutoriales</a>.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize tooltips
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl);
+  });
+});
+</script>
+{% endblock %}

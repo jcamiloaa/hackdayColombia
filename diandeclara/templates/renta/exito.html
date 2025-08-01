@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid bg-light min-vh-100">
+  <!-- Header DIAN Style -->
+  <div class="bg-success text-white py-2">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+          <span class="fw-bold">GOV.CO</span>
+          <span class="ms-3">Proceso Completado</span>
+        </div>
+        <div class="text-end small">
+          <div>A nombre propio</div>
+          <div>{{ user.first_name }} {{ user.last_name }}</div>
+          <div>{{ "now"|date:"d/m/Y | H:i:s" }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Breadcrumb y Progress -->
+  <div class="container py-3">
+    <div class="row">
+      <div class="col-12">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">← Declaración de renta personas naturales</a></li>
+            <li class="breadcrumb-item active">Proceso completado</li>
+          </ol>
+        </nav>
+        
+        <!-- Progress Steps -->
+        <div class="d-flex justify-content-center mb-4">
+          <div class="d-flex align-items-center">
+            <div class="step-circle completed">1</div>
+            <div class="step-line completed"></div>
+            <div class="step-circle completed">2</div>
+            <div class="step-line completed"></div>
+            <div class="step-circle completed">3</div>
+            <div class="step-line completed"></div>
+            <div class="step-circle completed">4</div>
+            <div class="step-line completed"></div>
+            <div class="step-circle completed">5</div>
+          </div>
+        </div>
+        <div class="d-flex justify-content-center mb-4 small">
+          <span class="text-muted me-4">Pregunta(s) inicial(es)</span>
+          <span class="text-muted me-4">Formulario 210</span>
+          <span class="text-muted me-4">Firmar</span>
+          <span class="text-muted me-4">Presentar</span>
+          <span class="text-success fw-bold">Completado</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="card shadow-sm border-success">
+          <div class="card-header bg-success text-white text-center">
+            <i class="bi bi-check-circle display-4"></i>
+            <h3 class="mt-2 mb-0">¡Proceso Completado Exitosamente!</h3>
+          </div>
+          <div class="card-body">
+            
+            <div class="alert alert-success" role="alert">
+              <h5><i class="bi bi-check-circle"></i> Su declaración de renta ha sido procesada</h5>
+              <p class="mb-0">El pago se ha registrado correctamente y su declaración está oficialmente presentada ante la DIAN.</p>
+            </div>
+
+            <!-- Información del proceso -->
+            <div class="row mb-4">
+              <div class="col-md-6">
+                <h6 class="text-success">Datos de la declaración:</h6>
+                <ul class="list-unstyled">
+                  <li><strong>NIT:</strong> {{ declaracion.nit }}-{{ declaracion.dv }}</li>
+                  <li><strong>Formulario:</strong> 210</li>
+                  <li><strong>Año gravable:</strong> 2024</li>
+                  <li><strong>Fecha presentación:</strong> {{ declaracion.fecha_presentacion|date:"d/m/Y H:i" }}</li>
+                  {% if pago %}
+                  <li><strong>Fecha pago:</strong> {{ pago.fecha_pago|date:"d/m/Y H:i" }}</li>
+                  <li><strong>Método de pago:</strong> {{ pago.metodo_pago|capfirst }}</li>
+                  {% endif %}
+                </ul>
+              </div>
+              <div class="col-md-6">
+                <div class="card bg-success bg-opacity-10">
+                  <div class="card-body text-center">
+                    <h6 class="text-success">Estado</h6>
+                    <h4 class="text-success"><i class="bi bi-check-circle"></i> PAGADA</h4>
+                    {% if pago %}
+                    <p class="mb-0 small">Valor pagado: <strong>${{ pago.monto|floatformat:0 }}</strong></p>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Acciones disponibles -->
+            <div class="row mb-4">
+              <div class="col-md-6">
+                <div class="card h-100">
+                  <div class="card-body text-center">
+                    <i class="bi bi-file-earmark-pdf display-4 text-danger"></i>
+                    <h6 class="mt-2">Descargar declaración</h6>
+                    <p class="small text-muted">Descargue su declaración oficial en formato PDF</p>
+                    <a href="{% url 'renta:descargar_pdf' declaracion.id %}" class="btn btn-outline-danger">
+                      <i class="bi bi-download"></i> Descargar PDF
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card h-100">
+                  <div class="card-body text-center">
+                    <i class="bi bi-receipt display-4 text-info"></i>
+                    <h6 class="mt-2">Comprobante de pago</h6>
+                    <p class="small text-muted">Descargue su comprobante oficial de pago</p>
+                    {% if pago %}
+                    <a href="{% url 'renta:descargar_comprobante' pago.id %}" class="btn btn-outline-info">
+                      <i class="bi bi-download"></i> Descargar comprobante
+                    </a>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Información adicional -->
+            <div class="alert alert-info" role="alert">
+              <h6><i class="bi bi-info-circle"></i> Información importante</h6>
+              <ul class="mb-0 small">
+                <li>Conserve estos documentos para sus registros contables</li>
+                <li>La DIAN puede solicitar documentos de soporte hasta 5 años después</li>
+                <li>Puede consultar el estado de su declaración en cualquier momento</li>
+                <li>Se ha enviado confirmación a su correo electrónico registrado</li>
+              </ul>
+            </div>
+
+            <div class="d-flex justify-content-center gap-3">
+              <a href="{% url 'renta:lista_declaraciones' %}" class="btn btn-primary">
+                <i class="bi bi-list"></i> Ver mis declaraciones
+              </a>
+              <a href="/" class="btn btn-outline-primary">
+                <i class="bi bi-house"></i> Volver al inicio
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.step-circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #e9ecef;
+  color: #6c757d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+}
+.step-circle.completed {
+  background-color: #198754;
+  color: white;
+}
+.step-line {
+  width: 60px;
+  height: 2px;
+  background-color: #e9ecef;
+}
+.step-line.completed {
+  background-color: #198754;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Show success animation
+  const checkIcon = document.querySelector('.display-4.bi-check-circle');
+  if (checkIcon) {
+    checkIcon.style.transform = 'scale(0)';
+    setTimeout(() => {
+      checkIcon.style.transition = 'transform 0.5s ease-out';
+      checkIcon.style.transform = 'scale(1)';
+    }, 100);
+  }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid bg-light min-vh-100">
+  <!-- Header DIAN Style -->
+  <div class="bg-primary text-white py-2">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+          <span class="fw-bold">GOV.CO</span>
+          <span class="ms-3">Preguntas iniciales</span>
+        </div>
+        <div class="text-end small">
+          <div>A nombre propio</div>
+          <div>{{ user.first_name }} {{ user.last_name }}</div>
+          <div>{{ "now"|date:"d/m/Y | H:i:s" }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Breadcrumb y Progress -->
+  <div class="container py-3">
+    <div class="row">
+      <div class="col-12">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">← Declaración de renta personas naturales</a></li>
+            <li class="breadcrumb-item active">Haga su declaración de renta</li>
+          </ol>
+        </nav>
+        
+        <!-- Progress Steps -->
+        <div class="d-flex justify-content-center mb-4">
+          <div class="d-flex align-items-center">
+            <div class="step-circle active">1</div>
+            <div class="step-line"></div>
+            <div class="step-circle">2</div>
+            <div class="step-line"></div>
+            <div class="step-circle">3</div>
+            <div class="step-line"></div>
+            <div class="step-circle">4</div>
+            <div class="step-line"></div>
+            <div class="step-circle">5</div>
+          </div>
+        </div>
+        <div class="d-flex justify-content-center mb-4 small">
+          <span class="text-success fw-bold me-4">Pregunta(s) inicial(es)</span>
+          <span class="text-muted me-4">Formulario 210</span>
+          <span class="text-muted me-4">Firmar</span>
+          <span class="text-muted me-4">Presentar</span>
+          <span class="text-muted">Pagar</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-9">
+        <div class="card shadow-sm">
+          <div class="card-header bg-white border-bottom">
+            <h4 class="mb-0">Preguntas Residencia - Paso 3 de 4</h4>
+            <p class="text-muted mb-0">Por favor responda la siguiente pregunta para determinar su situación tributaria.</p>
+          </div>
+          <div class="card-body">
+            <form method="post" id="residenciaForm">{% csrf_token %}
+              <input type="hidden" name="paso" value="3">
+              <div class="mb-4">
+                <div class="d-flex align-items-start mb-3">
+                  <div class="me-3">
+                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 30px; height: 30px; font-size: 14px;">
+                      3
+                    </div>
+                  </div>
+                  <div class="flex-grow-1">
+                    <h6 class="fw-bold mb-2">
+                      ¿Tiene usted nacionalidad colombiana?
+                      <button type="button" class="btn btn-outline-info btn-sm ms-2" data-bs-toggle="tooltip" 
+                              title="La nacionalidad colombiana puede afectar sus obligaciones tributarias. Los colombianos residentes en el exterior tienen obligaciones especiales.">
+                        <i class="bi bi-info-circle"></i>
+                      </button>
+                    </h6>
+                    
+                    <div class="mt-3">
+                      <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="nacionalidad_colombiana" value="si" id="si" required>
+                        <label class="form-check-label" for="si">
+                          <strong>Sí</strong> - Tengo nacionalidad colombiana
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="nacionalidad_colombiana" value="no" id="no" required>
+                        <label class="form-check-label" for="no">
+                          <strong>No</strong> - No tengo nacionalidad colombiana
+                        </label>
+                      </div>
+                    </div>
+                    
+                    <div id="help-text" class="alert alert-info mt-3" style="display: none;">
+                      <h6><i class="bi bi-lightbulb"></i> Información adicional:</h6>
+                      <ul class="mb-0 small">
+                        <li><strong>Ciudadanos colombianos:</strong> Pueden tener obligaciones tributarias especiales</li>
+                        <li><strong>Residentes en el exterior:</strong> Existen tratados para evitar doble tributación</li>
+                        <li><strong>Extranjeros:</strong> Sus obligaciones dependen de su tiempo de permanencia en Colombia</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="d-flex justify-content-between">
+                <a href="{% url 'renta:preguntas_residencia' %}?paso=2" class="btn btn-outline-secondary">
+                  <i class="bi bi-chevron-left"></i> Anterior
+                </a>
+                <button type="submit" class="btn btn-success" id="submitBtn" disabled>
+                  Siguiente <i class="bi bi-chevron-right"></i>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Sidebar Info -->
+      <div class="col-lg-3">
+        <div class="card bg-info bg-opacity-10 mb-3">
+          <div class="card-body">
+            <h6>Nro. de formulario: <strong>2118672580726</strong></h6>
+            <p class="mb-1"><strong>Año:</strong> 2024</p>
+            <p class="mb-1"><strong>Periodicidad:</strong> anual</p>
+            <p class="mb-1"><strong>Periodo:</strong> 1</p>
+            <p class="mb-1"><strong>Concepto:</strong> inicial</p>
+            <p class="mb-0"><strong>Estado:</strong> Borrador</p>
+          </div>
+        </div>
+        
+        <div class="card bg-warning bg-opacity-10 mb-3">
+          <div class="card-body">
+            <h6 class="text-warning"><i class="bi bi-clock"></i> Recordatorio</h6>
+            <p class="mb-0 small">Debe completar su declaración antes del 31 de octubre de 2025.</p>
+          </div>
+        </div>
+        
+        <div class="card bg-info bg-opacity-10">
+          <div class="card-body">
+            <h6 class="text-info"><i class="bi bi-lightbulb"></i> Ayuda</h6>
+            <p class="mb-0 small">¿Necesita ayuda con los conceptos de nacionalidad y residencia? <a href="#" class="text-info">Consulte nuestra guía</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.step-circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #e9ecef;
+  color: #6c757d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+}
+.step-circle.active {
+  background-color: #198754;
+  color: white;
+}
+.step-line {
+  width: 60px;
+  height: 2px;
+  background-color: #e9ecef;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize tooltips
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl);
+  });
+  
+  const form = document.getElementById('residenciaForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const helpText = document.getElementById('help-text');
+  const radioButtons = document.querySelectorAll('input[name="nacionalidad_colombiana"]');
+  
+  // Enable submit button when radio is selected
+  radioButtons.forEach(function(radio) {
+    radio.addEventListener('change', function() {
+      submitBtn.disabled = false;
+      submitBtn.classList.remove('btn-outline-success');
+      submitBtn.classList.add('btn-success');
+      
+      // Show help text
+      helpText.style.display = 'block';
+    });
+  });
+  
+  // Form validation
+  form.addEventListener('submit', function(e) {
+    const selectedOption = document.querySelector('input[name="nacionalidad_colombiana"]:checked');
+    if (!selectedOption) {
+      e.preventDefault();
+      alert('Por favor seleccione una opción antes de continuar.');
+    }
+  });
+  
+  // Check if already selected
+  const checkedRadio = document.querySelector('input[name="nacionalidad_colombiana"]:checked');
+  if (checkedRadio) {
+    submitBtn.disabled = false;
+    submitBtn.classList.add('btn-success');
+    helpText.style.display = 'block';
+  }
+});
+</script>
+{% endblock %}

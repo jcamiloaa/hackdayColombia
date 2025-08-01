@@ -1,0 +1,67 @@
+{% extends "allauth/layouts/entrance.html" %}
+{% load i18n %}
+{% load allauth account %}
+
+{% block head_title %}{% trans "Sign Out" %}{% endblock head_title %}
+
+{% block header_title %}
+  Cerrar Sesión
+{% endblock header_title %}
+
+{% block content %}
+  <div class="text-center mb-4">
+    <div class="mb-4">
+      <i class="bi bi-box-arrow-right display-1 text-warning"></i>
+    </div>
+    <h4 class="fw-bold text-primary">Confirmar Cierre de Sesión</h4>
+    <p class="text-muted">¿Está seguro que desea cerrar su sesión en el sistema?</p>
+  </div>
+
+  {% if user.is_authenticated %}
+    <div class="alert alert-info" role="alert">
+      <i class="bi bi-info-circle me-2"></i>
+      <strong>Usuario actual:</strong> {{ user.email|default:user.username }}
+    </div>
+
+    {% url 'account_logout' as action_url %}
+    {% element form method="post" action=action_url %}
+      {% slot body %}
+        {% csrf_token %}
+        {% if redirect_field_value %}
+          <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+        {% endif %}
+        
+        <div class="d-grid gap-2 mb-3">
+          <button type="submit" class="btn btn-danger btn-lg">
+            <i class="bi bi-box-arrow-right me-2"></i>{% trans "Sign Out" %}
+          </button>
+        </div>
+        
+        <div class="d-grid gap-2">
+          <a href="{% url 'home' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-2"></i>Cancelar
+          </a>
+        </div>
+      {% endslot %}
+    {% endelement %}
+  {% else %}
+    <div class="alert alert-warning" role="alert">
+      <i class="bi bi-exclamation-triangle me-2"></i>
+      No hay ninguna sesión activa para cerrar.
+    </div>
+    
+    <div class="d-grid gap-2">
+      <a href="{% url 'home' %}" class="btn btn-primary">
+        <i class="bi bi-house me-2"></i>Volver al Inicio
+      </a>
+    </div>
+  {% endif %}
+
+  <div class="mt-4 text-center">
+    <small class="text-muted">
+      <i class="bi bi-shield-check me-1"></i>
+      Su sesión se cerrará de forma segura
+    </small>
+  </div>
+
+{% endblock content %}

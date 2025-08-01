@@ -1,0 +1,169 @@
+{% extends "allauth/layouts/entrance.html" %}
+{% load i18n %}
+{% load allauth account %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock head_title %}
+
+{% block header_title %}
+  Iniciar Sesión
+{% endblock header_title %}
+
+{% block content %}
+  <div class="text-center mb-4">
+    <h4 class="fw-bold text-primary">Acceso al Sistema</h4>
+    <p class="text-muted">Ingrese sus credenciales para acceder a la plataforma de declaración de renta</p>
+  </div>
+
+  <!-- Credenciales de prueba -->
+  <div class="alert alert-info border-0 shadow-sm mb-4">
+    <div class="d-flex align-items-center mb-2">
+      <i class="bi bi-info-circle-fill me-2 text-info"></i>
+      <strong>Credenciales de Prueba</strong>
+    </div>
+    <div class="row">
+      <div class="col-md-6 mb-2">
+        <small class="text-muted d-block">Email:</small>
+        <code class="bg-transparent text-dark">admin@diandeclara.com</code>
+      </div>
+      <div class="col-md-6 mb-2">
+        <small class="text-muted d-block">Contraseña:</small>
+        <code class="bg-transparent text-dark">qwerty2025</code>
+      </div>
+    </div>
+    <div class="mt-2">
+      <button type="button" class="btn btn-outline-info btn-sm" onclick="fillCredentials()">
+        <i class="bi bi-clipboard me-1"></i>Usar credenciales de prueba
+      </button>
+    </div>
+  </div>
+
+  {% if not SOCIALACCOUNT_ONLY %}
+    {% setvar link %}
+      <a href="{{ signup_url }}" class="text-decoration-none">
+    {% endsetvar %}
+    {% setvar end_link %}
+      </a>
+    {% endsetvar %}
+    
+    <p class="text-center mb-4">
+      {% blocktranslate %}¿No tiene una cuenta? {{ link }}Regístrese aquí{{ end_link }}{% endblocktranslate %}
+    </p>
+
+    {% url 'account_login' as login_url %}
+    {% element form form=form method="post" action=login_url tags="entrance,login" %}
+      {% slot body %}
+        {% csrf_token %}
+        
+        <!-- Email field -->
+        <div class="mb-3">
+          <label for="{{ form.login.id_for_label }}" class="form-label fw-bold">
+            <i class="bi bi-envelope me-2"></i>{{ form.login.label }}
+          </label>
+          <input type="{{ form.login.field.widget.input_type }}" 
+                 name="{{ form.login.name }}" 
+                 class="form-control form-control-lg" 
+                 id="{{ form.login.id_for_label }}"
+                 placeholder="Ingrese su email"
+                 {% if form.login.value %}value="{{ form.login.value }}"{% endif %}
+                 required>
+          {% if form.login.errors %}
+            <div class="text-danger small mt-1">{{ form.login.errors }}</div>
+          {% endif %}
+        </div>
+
+        <!-- Password field -->
+        <div class="mb-3">
+          <label for="{{ form.password.id_for_label }}" class="form-label fw-bold">
+            <i class="bi bi-lock me-2"></i>{{ form.password.label }}
+          </label>
+          <input type="password" 
+                 name="{{ form.password.name }}" 
+                 class="form-control form-control-lg" 
+                 id="{{ form.password.id_for_label }}"
+                 placeholder="Ingrese su contraseña"
+                 required>
+          {% if form.password.errors %}
+            <div class="text-danger small mt-1">{{ form.password.errors }}</div>
+          {% endif %}
+        </div>
+
+        <!-- Remember me -->
+        {% if form.remember %}
+          <div class="form-check mb-3">
+            <input type="checkbox" 
+                   name="{{ form.remember.name }}" 
+                   class="form-check-input" 
+                   id="{{ form.remember.id_for_label }}">
+            <label class="form-check-label" for="{{ form.remember.id_for_label }}">
+              {{ form.remember.label }}
+            </label>
+          </div>
+        {% endif %}
+
+        <!-- Submit button -->
+        <div class="d-grid gap-2 mb-3">
+          <button type="submit" class="btn btn-primary btn-lg">
+            <i class="bi bi-box-arrow-in-right me-2"></i>{% trans "Sign In" %}
+          </button>
+        </div>
+
+        <!-- Password reset link -->
+        {% url 'account_reset_password' as passwd_reset_url %}
+        {% if passwd_reset_url %}
+          <div class="text-center">
+            <a href="{{ passwd_reset_url }}" class="text-decoration-none small">
+              <i class="bi bi-question-circle me-1"></i>{% trans "Forgot Password?" %}
+            </a>
+          </div>
+        {% endif %}
+      {% endslot %}
+    {% endelement %}
+  {% endif %}
+
+  {% if SOCIALACCOUNT_ENABLED %}
+    {% include "socialaccount/snippets/login.html" with page_layout="entrance" %}
+  {% endif %}
+
+{% endblock content %}
+
+{% block extra_body %}
+<script>
+function fillCredentials() {
+  // Llenar las credenciales de prueba automáticamente
+  const emailField = document.querySelector('input[name="login"]');
+  const passwordField = document.querySelector('input[name="password"]');
+  
+  if (emailField) {
+    emailField.value = 'admin@diandeclara.com';
+  }
+  
+  if (passwordField) {
+    passwordField.value = 'qwerty2025';
+  }
+  
+  // Agregar efecto visual para confirmar que se llenaron
+  if (emailField && passwordField) {
+    emailField.classList.add('border-success');
+    passwordField.classList.add('border-success');
+    
+    setTimeout(() => {
+      emailField.classList.remove('border-success');
+      passwordField.classList.remove('border-success');
+    }, 1500);
+  }
+  
+  // Mensaje de confirmación
+  const button = event.target;
+  const originalText = button.innerHTML;
+  button.innerHTML = '<i class="bi bi-check me-1"></i>Credenciales cargadas';
+  button.classList.remove('btn-outline-info');
+  button.classList.add('btn-success');
+  
+  setTimeout(() => {
+    button.innerHTML = originalText;
+    button.classList.remove('btn-success');
+    button.classList.add('btn-outline-info');
+  }, 1500);
+}
+</script>
+{% endblock extra_body %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h1>Test - Menú Principal</h1>
+    <p>Esta es una página de prueba para verificar si el problema está en el template o en el CSS.</p>
+    
+    <div class="alert alert-info">
+        <h4>Usuario actual: {{ user.username }}</h4>
+        <p>Fecha: {{ "now"|date:"d/m/Y H:i:s" }}</p>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Hacer Declaración</h5>
+                    <p class="card-text">Iniciar proceso de declaración</p>
+                    <a href="{% url 'renta:preguntas_residencia' %}" class="btn btn-primary">Comenzar</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Mis Declaraciones</h5>
+                    <p class="card-text">Ver historial de declaraciones</p>
+                    <a href="{% url 'renta:lista_declaraciones' %}" class="btn btn-info">Ver Lista</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+console.log('Template test cargado correctamente');
+console.log('Usuario:', '{{ user.username }}');
+console.log('Elementos encontrados:', document.querySelectorAll('.card').length);
+</script>
+{% endblock %}
