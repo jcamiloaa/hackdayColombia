@@ -102,6 +102,55 @@ this.screenStream = await navigator.mediaDevices.getDisplayMedia({
 - **Detección automática**: Reconoce cuando el usuario detiene desde el navegador
 - **Seguridad**: Solo video, sin audio para privacidad
 
+### 5. **Modo Interactivo - Contexto por Clic** 🆕
+Funcionalidad que permite capturar el contexto de elementos de la página mediante clics del mouse.
+
+#### Implementación:
+```javascript
+// Habilitar captura de contexto
+this.contextClickHandler = (event) => this.handleContextClick(event);
+document.addEventListener('click', this.contextClickHandler, true);
+
+// Generar contexto del elemento
+const context = this.generateElementContext(clickedElement);
+```
+
+#### Características Principales:
+- **Activación automática**: Se habilita al abrir el chat o compartir pantalla
+- **Captura inteligente**: Analiza tipo, contenido y ubicación del elemento
+- **Respuestas contextuales**: Genera explicaciones específicas según el elemento y la página
+- **Control manual**: Botón toggle para habilitar/deshabilitar
+- **Indicador visual**: Muestra estado activo en la parte superior
+- **Resaltado temporal**: Elementos clicados se destacan por 2 segundos
+
+#### Tipos de Elementos Soportados:
+- **Botones**: Identifica acción y estado (habilitado/deshabilitado)
+- **Campos de entrada**: Reconoce tipo, validaciones y propósito
+- **Enlaces**: Extrae destino y descripción
+- **Formularios**: Analiza estructura y campos requeridos
+- **Imágenes**: Lee atributos alt y src
+- **Tablas**: Cuenta filas y analiza estructura
+- **Listas**: Identifica tipo y cantidad de elementos
+- **Títulos**: Extrae jerarquía y contenido
+- **Secciones**: Ubica contexto dentro de la página
+
+#### Respuestas Contextuales por Página:
+```javascript
+// Formulario 210
+if (currentUrl.includes('formulario_210')) {
+  if (element.id.includes('cedula')) {
+    return 'Este campo es para tu número de cédula...';
+  }
+  // Más contextos específicos...
+}
+```
+
+#### Control de Usuario:
+- **Botón Toggle**: "Modo Interactivo: ON/OFF"
+- **Indicador Superior**: Muestra estado con opción de cerrar
+- **Mensajes en Chat**: Confirma activación/desactivación
+- **Prevención de Conflictos**: Ignora clics en el propio asistente
+
 ## 🎨 Diseño y UX
 
 ### Sistema de Colores
@@ -179,6 +228,8 @@ document.addEventListener('DOMContentLoaded', function() {
 2. **Screen Capture API**: Compartir pantalla
 3. **DOM API**: Manipulación de elementos
 4. **CSS Animation API**: Animaciones fluidas
+5. **Event API**: Captura global de eventos de clic 🆕
+6. **Element Analysis API**: Análisis de propiedades de elementos 🆕
 
 ### Frameworks y Librerías
 1. **Bootstrap 5**: Sistema de diseño y componentes
@@ -189,14 +240,16 @@ document.addEventListener('DOMContentLoaded', function() {
 ## 📊 Métricas de Rendimiento
 
 ### Tamaños de Archivos
-- `project.css`: ~8KB (sección del asistente)
-- `project.js`: ~12KB (clase VirtualAssistant)
+- `project.css`: ~12KB (sección del asistente + contexto por clic)
+- `project.js`: ~20KB (clase VirtualAssistant + funcionalidad interactiva)
 - Imágenes: `bot.gif` (~15KB)
 
 ### Tiempo de Carga
 - **Inicialización**: <100ms
 - **Apertura del modal**: <300ms con animación
 - **Reconocimiento de voz**: <500ms para iniciar
+- **Modo interactivo**: <50ms para activar/desactivar
+- **Análisis de contexto**: <100ms por elemento
 
 ## 🔒 Consideraciones de Seguridad
 

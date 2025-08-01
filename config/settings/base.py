@@ -82,6 +82,7 @@ THIRD_PARTY_APPS = [
     "rest_framework.authtoken",
     "corsheaders",
     "drf_spectacular",
+    "channels",
 ]
 
 LOCAL_APPS = [
@@ -229,6 +230,18 @@ EMAIL_BACKEND = env(
 )
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-timeout
 EMAIL_TIMEOUT = 5
+
+# CHANNELS (WebSocket)
+ASGI_APPLICATION = "config.asgi.application"
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+}
+
+# OPENAI ASSISTANT API
+API_OPENAI_KEY = env("API_OPENAI_KEY", default=None)
+ASSITANT_ID = env("ASSITANT_ID", default=None)
 
 # ADMIN
 # ------------------------------------------------------------------------------

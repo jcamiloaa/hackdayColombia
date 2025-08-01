@@ -212,7 +212,13 @@ document.addEventListener('DOMContentLoaded', function() {
                   <i class="bi bi-send"></i>
                 </button>
               </div>
-              <button id="back-to-options" class="btn btn-secondary btn-sm mt-2">Volver al menú</button>
+              <div class="chat-controls mt-2">
+                <button id="toggle-context-click" class="btn btn-outline-primary btn-sm me-2">
+                  <i id="context-click-icon" class="bi bi-cursor-fill"></i>
+                  <span id="context-click-text">Modo Interactivo: ON</span>
+                </button>
+                <button id="back-to-options" class="btn btn-secondary btn-sm">Volver al menú</button>
+              </div>
             </div>
 
             <!-- Pantalla de Voz -->

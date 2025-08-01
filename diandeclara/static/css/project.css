@@ -553,3 +553,115 @@
     bottom: 100px;
   }
 }
+
+/* Context Click Functionality Styles */
+.chat-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+#toggle-context-click {
+  transition: all 0.3s ease;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+#toggle-context-click:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+#context-click-icon {
+  font-size: 14px;
+}
+
+/* Highlight effect for clicked elements */
+.context-highlight {
+  outline: 3px solid #007bff !important;
+  outline-offset: 2px !important;
+  transition: outline 0.3s ease !important;
+  animation: contextPulse 0.6s ease-out;
+}
+
+@keyframes contextPulse {
+  0% {
+    outline-color: #007bff;
+    outline-width: 3px;
+  }
+  50% {
+    outline-color: #28a745;
+    outline-width: 5px;
+  }
+  100% {
+    outline-color: #007bff;
+    outline-width: 3px;
+  }
+}
+
+/* Context indicator improvements */
+#context-click-indicator {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.context-indicator-content {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Screen chat improvements for context */
+.screen-chat-message.context-message {
+  background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+  border-left: 4px solid #007bff;
+  padding: 12px;
+  border-radius: 8px;
+  margin: 8px 0;
+}
+
+.screen-chat-message.context-message .message-content {
+  color: #1565c0;
+  font-weight: 500;
+}
+
+/* Enhanced button styles for better visibility */
+.btn-outline-primary.btn-sm {
+  border-width: 2px;
+}
+
+.btn-success.btn-sm {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  border: none;
+  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+}
+
+.btn-outline-secondary.btn-sm {
+  color: #6c757d;
+  border-color: #dee2e6;
+  background: #f8f9fa;
+}
+
+/* Responsive adjustments for context controls */
+@media (max-width: 480px) {
+  .chat-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  #toggle-context-click {
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+  
+  #context-click-indicator {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+}

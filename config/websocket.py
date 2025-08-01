@@ -1,13 +1,17 @@
-async def websocket_application(scope, receive, send):
-    while True:
-        event = await receive()
+from channels.routing import ProtocolTypeRouter, URLRouter
+from channels.auth import AuthMiddlewareStack
+from django.core.asgi import get_asgi_application
+from django.urls import path
+from diandeclara.users.api.assistant_consumer import AssistantConsumer
 
-        if event["type"] == "websocket.connect":
-            await send({"type": "websocket.accept"})
+# Django ASGI application para HTTP
+django_asgi_app = get_asgi_application()
 
-        if event["type"] == "websocket.disconnect":
-            break
-
-        if event["type"] == "websocket.receive":
-            if event["text"] == "ping":
-                await send({"type": "websocket.send", "text": "pong!"})
+websocket_application = ProtocolTypeRouter({
+    "http": django_asgi_app,
+    "websocket": AuthMiddlewareStack(
+        URLRouter([
+            path("ws/assistant/", AssistantConsumer.as_asgi()),
+        ])
+    ),
+})
