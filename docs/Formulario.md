@@ -54,7 +54,7 @@ De acuerdo con su(s) respuesta(s), usted NO es residente fiscal en Colombia. Rea
 
 
 ## Seccion 2. Formulario 210
-
+![alt text](image3.png)
 5. Número de Identificación Tributaria (NIT) 
 5555555555555
 6. DV. 
