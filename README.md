@@ -1,4 +1,4 @@
-# dIAndeclara - Asistente Virtual para Declaración de Renta
+# ColombIAdeclara - Asistente Virtual para Declaración de Renta
 
 Un asistente cognitivo multimodal para facilitar el proceso de declaración de renta en Colombia, ofreciendo orientación en tiempo real mediante interfaces de chat, voz y contexto interactivo.
 
