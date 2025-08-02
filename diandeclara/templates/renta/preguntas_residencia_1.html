@@ -139,6 +139,66 @@
   height: 2px;
   background-color: #e9ecef;
 }
+
+/* Animación de rebote para el botón del asistente */
+#assistant-btn {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  z-index: 9999;
+  animation: bounceInTop 2.5s cubic-bezier(.25,.1,.25,1) both;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+}
+
+#assistant-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+}
+
+/* Efecto de pulsación para llamar la atención */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.7);
+    transform: scale(1);
+  }
+  70% {
+    box-shadow: 0 0 0 15px rgba(0, 123, 255, 0);
+    transform: scale(1.05);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
+    transform: scale(1);
+  }
+}
+
+.pulse-effect {
+  animation: pulse 1s ease-in-out;
+}
+
+@keyframes bounceInTop {
+  0% {
+    opacity: 0;
+    transform: translate(20px, -500px) rotate(10deg);
+  }
+  40% {
+    opacity: 0.6;
+    transform: translate(0, 20px) rotate(-5deg);
+  }
+  60% {
+    opacity: 1;
+    transform: translate(0, -15px) rotate(3deg);
+  }
+  75% {
+    transform: translate(0, 10px) rotate(-2deg);
+  }
+  90% {
+    transform: translate(0, -5px) rotate(1deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0);
+  }
+}
 </style>
 
 <script>
@@ -181,6 +241,49 @@ document.addEventListener('DOMContentLoaded', function() {
       helpText.style.display = 'block';
     });
   });
+});
+</script>
+
+<script>
+// Efecto y saludo automático del asistente virtual
+document.addEventListener('DOMContentLoaded', function() {
+  var assistantBtn = document.getElementById('assistant-btn');
+  if (assistantBtn) {
+    assistantBtn.style.display = 'block';
+    
+    // Agregar efecto de brillo
+    setTimeout(function() {
+      // Agregamos un pequeño efecto de pulsación
+      function pulseEffect() {
+        assistantBtn.classList.add('pulse-effect');
+        setTimeout(() => assistantBtn.classList.remove('pulse-effect'), 1000);
+      }
+      
+      // Pulsar cada 5 segundos para llamar la atención
+      pulseEffect();
+      setInterval(pulseEffect, 5000);
+      
+      // Reproducir saludo por voz con un pequeño retraso para que coincida con la animación
+      setTimeout(function() {
+        var saludo = "Hola usuario, soy TributIA y te acompañaré en este proceso de declaración de renta, cualquier duda que tengas no dudes en preguntarme";
+        if ('speechSynthesis' in window) {
+          var utter = new SpeechSynthesisUtterance(saludo);
+          utter.lang = 'es-ES';
+          utter.rate = 0.9; // Un poco más lento para mejor comprensión
+          utter.pitch = 1.1; // Ligeramente más agudo para sonar amigable
+          utter.volume = 0.9; // Volumen apropiado
+          window.speechSynthesis.speak(utter);
+        }
+        
+        // Abrir el asistente automáticamente si tiene función
+        if (typeof assistantBtn.click === 'function') {
+          setTimeout(function() {
+            assistantBtn.click();
+          }, 1500);
+        }
+      }, 1800); // Esperamos a que la animación esté casi completa
+    }, 500);
+  }
 });
 </script>
 {% endblock %}
