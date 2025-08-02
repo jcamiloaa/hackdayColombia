@@ -86,11 +86,22 @@ class AssistantConsumer(AsyncWebsocketConsumer):
             
             client = OpenAI(api_key=api_key)
             
+            # Verificar que el asistente existe
+            try:
+                assistant = await asyncio.to_thread(
+                    client.beta.assistants.retrieve,
+                    assistant_id=assistant_id
+                )
+                print(f"Asistente encontrado: {assistant.name}")
+            except Exception as e:
+                return f"Error: El asistente con ID {assistant_id} no existe o no es accesible. Verifica el ID del asistente."
+            
             # Obtener o crear thread para el usuario
             thread = user_threads.get(self.user_id)
             if not thread:
                 thread = await asyncio.to_thread(client.beta.threads.create)
                 user_threads[self.user_id] = thread
+                print(f"Nuevo thread creado: {thread.id}")
             
             # Añadir mensaje del usuario al thread
             await asyncio.to_thread(
@@ -102,27 +113,40 @@ class AssistantConsumer(AsyncWebsocketConsumer):
             
             # Ejecutar el assistant
             run = await asyncio.to_thread(
-                client.beta.threads.runs.create_and_poll,
+                client.beta.threads.runs.create,
                 thread_id=thread.id,
                 assistant_id=assistant_id
             )
             
-            # Obtener respuesta
-            if run.status == "completed":
-                messages = await asyncio.to_thread(
-                    client.beta.threads.messages.list,
-                    thread_id=thread.id
+            # Esperar a que el run termine
+            while True:
+                run_status = await asyncio.to_thread(
+                    client.beta.threads.runs.retrieve,
+                    thread_id=thread.id,
+                    run_id=run.id
                 )
                 
-                # Buscar la última respuesta del asistente
-                for msg in messages.data:
-                    if msg.role == "assistant":
-                        content = msg.content[0].text.value if msg.content else ""
-                        return content
+                if run_status.status == "completed":
+                    break
+                elif run_status.status in ["failed", "cancelled", "expired"]:
+                    return f"Error en el procesamiento: {run_status.status}"
                 
-                return "No se recibió respuesta del asistente"
-            else:
-                return f"Error en el procesamiento: {run.status}"
+                # Esperar 1 segundo antes de volver a verificar
+                await asyncio.sleep(1)
+            
+            # Obtener respuesta
+            messages = await asyncio.to_thread(
+                client.beta.threads.messages.list,
+                thread_id=thread.id
+            )
+            
+            # Buscar la última respuesta del asistente
+            for msg in messages.data:
+                if msg.role == "assistant":
+                    content = msg.content[0].text.value if msg.content else ""
+                    return content
+            
+            return "No se recibió respuesta del asistente"
                 
         except Exception as e:
             return f"Error procesando con OpenAI: {str(e)}"
