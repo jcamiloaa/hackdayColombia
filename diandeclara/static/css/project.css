@@ -16,7 +16,6 @@
 /* Asegurar que el contenedor tenga posición relativa */
 .container {
   position: relative;
-  min-height: 100vh;
 }
 
 #virtual-assistant {

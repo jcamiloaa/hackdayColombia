@@ -10,16 +10,16 @@
 {% endblock title %}
 {% block body %}
   <!-- Header GOV.CO exacto como en DIAN -->
-  <div style="background-color: #4472C4;" class="text-white py-1">
-    <div class="container-fluid px-3">
-      <div class="d-flex justify-content-between align-items-center">
-        <div class="d-flex align-items-center">
-          <span class="fw-bold" style="font-size: 0.85rem;">🌐 GOV.CO</span>
-          <span class="ms-3" style="font-size: 0.85rem;">Dirección de Impuestos y Aduanas Nacionales</span>
-        </div>
-        <div class="text-end small">
-          <a href="{% url 'home' %}" class="text-white text-decoration-none">Volver al inicio</a>
-        </div>
+  <!-- Header institucional DIAN con dos tonos de azul -->
+  <div class="container-fluid px-0">
+    <div class="row" style="background-color: transparent;">
+      <div class="col-lg-1 col-sm-2 col-4 d-flex align-items-center justify-content-center py-1" style="background: #3366CC 0% 0% no-repeat padding-box;">
+        <a href="https://www.gov.co">
+          <img src="/static/images/logo_header.png" alt="logo GOV.CO" style="max-height:40px;max-width:100%;width:auto;height:auto;display:block;margin:auto;">
+        </a>
+      </div>
+      <div class="col-lg-11 col-sm-10 col-8 d-flex align-items-center py-1" style="background: #E5EEFB 0% 0% no-repeat padding-box;">
+        <span class="fw-bold text-primary ms-2" style="font-size: 0,5rem;">Dirección de Impuestos y Aduanas Nacionales</span>
       </div>
     </div>
   </div>
@@ -32,9 +32,6 @@
              alt="Escudo Colombia" 
              style="height: 50px; width: auto;" 
              class="me-3">
-        <div>
-          <h1 class="h2 fw-bold mb-0" style="color: #1f4e79; font-size: 2.5rem; letter-spacing: 0.1em;">DIAN</h1>
-        </div>
       </div>
     </div>
   </div>
