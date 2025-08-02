@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 {% block content %}
 
 {% if user.is_authenticated %}
@@ -246,13 +247,15 @@
     <!-- Header DIAN con logo -->
     <div class="bg-white py-3 border-bottom">
       <div class="container-fluid px-3">
-        <div class="d-flex align-items-center">
-          <img src="https://www.dian.gov.co/imagenes/Escudo_Colombia.png" 
-               alt="Escudo Colombia" 
-               style="height: 50px; width: auto;" 
-               class="me-3">
+        <div class="d-flex justify-content-between align-items-center">
           <div>
-            <h1 class="h2 fw-bold mb-0" style="color: #1f4e79; font-size: 2.5rem; letter-spacing: 0.1em;">DIAN</h1>
+            <img src="https://www.dian.gov.co/imagenes/Escudo_Colombia.png" 
+                 alt="Escudo Colombia" 
+                 style="height: 50px; width: auto;" 
+                 class="me-3">
+          </div>
+          <div>
+            <a href="{% url 'account_login' %}" class="btn btn-primary">Iniciar Sesión</a>
           </div>
         </div>
       </div>
@@ -265,69 +268,65 @@
            class="img-fluid w-100" 
            style="max-height: 500px; object-fit: cover;">
       
-      <!-- Overlay para mejorar legibilidad si es necesario -->
-      <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-end">
-        <div class="container-fluid px-3 pb-4">
-          <div class="row">
-            <div class="col-md-6">
-              <!-- Información adicional sobre el login -->
-              <div class="bg-white bg-opacity-90 p-4 rounded shadow">
-                <h3 class="fw-bold text-primary mb-3">Accede al Sistema</h3>
-                <p class="mb-3">Para presentar tu declaración de renta 2024, debes iniciar sesión o registrarte.</p>
-                <div class="d-flex gap-2">
-                  <a href="{% url 'account_login' %}" class="btn btn-primary">Iniciar Sesión</a>
-                  <a href="{% url 'account_signup' %}" class="btn btn-outline-primary">Registrarse</a>
-                </div>
-              </div>
+
+    <!-- Sistema de Declaración de Renta e Información Importante -->
+    <div class="bg-white py-5">
+      <div class="container">
+        <!-- Título y descripción principal -->
+        <div class="row mb-5">
+          <div class="col-md-8 mx-auto text-center">
+            <h2 class="fw-bold mb-4 text-primary">Sistema de Declaración de Renta 2024</h2>
+            <div class="d-flex justify-content-center mb-3">
+              <div class="border-bottom border-warning" style="width: 80px;"></div>
             </div>
+            <p class="lead mb-0">
+              Plataforma oficial para la presentación de declaraciones de renta de personas naturales.
+              Proceso digital, seguro y simplificado.
+            </p>
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Información adicional y pie de página -->
-    <div class="container my-5">
-      <div class="row">
-        <div class="col-md-8 mx-auto text-center">
-          <h3 class="fw-bold mb-4">Sistema de Declaración de Renta 2024</h3>
-          <p class="lead text-muted">
-            Plataforma oficial para la presentación de declaraciones de renta de personas naturales.
-            Proceso digital, seguro y simplificado.
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Información importante -->
-    <div class="bg-light py-5">
-      <div class="container">
+        <!-- Información importante con icónos y diseño mejorado -->
         <div class="row">
           <div class="col-12 text-center mb-4">
             <h3 class="fw-bold">Información Importante</h3>
+            <div class="d-flex justify-content-center mb-4">
+              <div class="border-bottom border-primary" style="width: 60px;"></div>
+            </div>
           </div>
         </div>
         
-        <div class="row g-4">
-          <div class="col-md-6">
-            <div class="card border-0 bg-warning bg-opacity-10">
-              <div class="card-body">
-                <h6 class="text-warning"><i class="bi bi-calendar-event"></i> Fechas Límite 2024</h6>
-                <ul class="mb-0">
-                  <li><strong>Declaración:</strong> Hasta el 31 de octubre de 2025</li>
-                  <li><strong>Pago:</strong> Hasta el 31 de octubre de 2025</li>
+        <div class="row g-4 justify-content-center">
+          <div class="col-md-5">
+            <div class="card border-0 shadow-sm h-100 bg-warning bg-opacity-10">
+              <div class="card-body p-4">
+                <div class="d-flex align-items-center mb-3">
+                  <div class="bg-warning text-white p-3 rounded-circle me-3">
+                    <i class="bi bi-calendar-event fs-4"></i>
+                  </div>
+                  <h5 class="card-title mb-0 text-warning fw-bold">Fechas Límite 2024</h5>
+                </div>
+                <ul class="mb-0 ps-4">
+                  <li class="mb-2"><strong>Declaración:</strong> Hasta el 31 de octubre de 2025</li>
+                  <li class="mb-2"><strong>Pago:</strong> Hasta el 31 de octubre de 2025</li>
                   <li><strong>Extemporáneas:</strong> Con sanción e intereses</li>
                 </ul>
               </div>
             </div>
           </div>
           
-          <div class="col-md-6">
-            <div class="card border-0 bg-info bg-opacity-10">
-              <div class="card-body">
-                <h6 class="text-info"><i class="bi bi-shield-check"></i> Seguridad</h6>
-                <ul class="mb-0">
-                  <li>Conexión SSL encriptada</li>
-                  <li>Datos protegidos según LOPD</li>
+          <div class="col-md-5">
+            <div class="card border-0 shadow-sm h-100 bg-info bg-opacity-10">
+              <div class="card-body p-4">
+                <div class="d-flex align-items-center mb-3">
+                  <div class="bg-info text-white p-3 rounded-circle me-3">
+                    <i class="bi bi-shield-check fs-4"></i>
+                  </div>
+                  <h5 class="card-title mb-0 text-info fw-bold">Seguridad</h5>
+                </div>
+                <ul class="mb-0 ps-4">
+                  <li class="mb-2">Conexión SSL encriptada</li>
+                  <li class="mb-2">Datos protegidos según LOPD</li>
                   <li>Respaldo automático de información</li>
                 </ul>
               </div>
@@ -337,22 +336,65 @@
       </div>
     </div>
 
-    <!-- Footer complementario -->
-    <div class="bg-primary text-white py-4">
+    <!-- Footer ultra-compacto -->
+    <footer class="bg-primary text-white py-1">
+    <footer class="he_footer bg-primary text-white border-top mt-5 pt-4 pb-2">
       <div class="container">
         <div class="row">
-          <div class="col-md-8">
-            <h6>Dirección de Impuestos y Aduanas Nacionales - DIAN</h6>
-            <p class="mb-0 small">Nivel Central, Sede principal | Carrera 8 Nº 6C - 38 Edificio San Agustín</p>
-            <p class="mb-0 small">Código Postal: 111711 | Horario: Lunes a Viernes 8:00 a.m. a 5:00 p.m.</p>
+          <div class="col-xl-2 col-lg-3 col-12 col-sm-12 logos mb-3 mb-lg-0">
+            <div class="logo mb-2">
+              <a href="https://www.gov.co" target="_blank">
+                <img src="{% static 'images/logo_footer.png' %}" alt="logo GOV.CO" style="max-width: 100px; height: auto;">
+              </a>
+            </div>
+            <div class="logo_co">
+              <a href="https://www.colombia.co" target="_blank">
+                <img src="{% static 'images/logo_co_footer.png' %}" alt="logo Colombia" style="max-width: 100px; height: auto;">
+              </a>
+            </div>
           </div>
-          <div class="col-md-4 text-md-end">
-            <p class="mb-0 small">Línea de Contacto Tributario:</p>
-            <h6>01 8000 123456</h6>
+          <div class="col-xl-6 col-lg-5 col-12 col-sm-12">
+            <h4 class="fw-bold mb-1">Dirección de Impuestos y Aduanas Nacionales</h4>
+            <div class="mb-1 text-white">NIT: 800.197.268-4</div>
+            <p class="mb-1 text-white"></p>
+            <p class="mb-1 text-white">
+              Dirección: Sede principal | Bogotá, Nivel Central, carrera 8 Nº 6C - 38 Edificio San Agustín<br>
+              Código Postal: 111711<br>
+              Horario Contact Center: Lunes a Viernes 8:00 a.m. a 7:00 p.m. y Sábados de 8:00 a.m. a 12:00 m.
+            </p>
+            <ul class="he_footer_redes list-inline mt-2 mb-0">
+              <li class="list-inline-item"><a href="https://twitter.com/DIANColombia" target="_blank"><img src="{% static 'images/X-54x54C.png' %}" alt="Twitter" style="height:32px;filter:brightness(100);background:#fff;border-radius:50%;padding:2px;"></a></li>
+              <li class="list-inline-item"><a href="https://www.youtube.com/channel/UCkaPJ8afIoa_RDKEHaQIxrw" target="_blank"><img src="{% static 'images/youtube.png' %}" alt="Youtube" style="height:32px;filter:brightness(100);background:#fff;border-radius:50%;padding:2px;"></a></li>
+              <li class="list-inline-item"><a href="https://www.linkedin.com/company/diancolombia/" target="_blank"><img src="{% static 'images/linkedin.png' %}" alt="Linkedin" style="height:32px;filter:brightness(100);background:#fff;border-radius:50%;padding:2px;"></a></li>
+              <li class="list-inline-item"><a href="https://www.facebook.com/DIANCol/" target="_blank"><img src="{% static 'images/facebook.png' %}" alt="Facebook" style="height:32px;filter:brightness(100);background:#fff;border-radius:50%;padding:2px;"></a></li>
+              <li class="list-inline-item"><a href="https://www.instagram.com/diancolombia/?hl=es-la" target="_blank"><img src="{% static 'images/instagram.png' %}" alt="Instagram" style="height:32px;filter:brightness(100);background:#fff;border-radius:50%;padding:2px;"></a></li>
+              <li class="list-inline-item"><a href="https://www.tiktok.com/@diancolombia" target="_blank"><img src="{% static 'images/Tiktok-54x54C.png' %}" alt="Tiktok" style="height:32px;filter:brightness(100);background:#fff;border-radius:50%;padding:2px;"></a></li>
+            </ul>
+          </div>
+          <div class="col-lg-4 col-12 col-sm-12">
+            <h4 class="fw-bold mb-1"><img src="{% static 'images/Phone.png' %}" alt="Contacto" style="height:24px;vertical-align:middle;"> Contacto</h4>
+            <h5 class="mb-1 text-white">Contact Center</h5>
+            <p class="mb-1 text-white">
+              57 601 489 9000 Línea de Contact Center atención de Impuestos<br>
+              57 601 794 8880 Línea de Contact Center atención de Aduanas<br>
+              57 601 794 8883 Línea Centro Nacional de Cobro<br>
+            </p>
+            <h5 class="mb-1 text-white"><strong>Servicio en Línea de Contacto</strong></h5>
+            <p class="mb-1">
+              <a href="https://www.dian.gov.co/atencionciudadano/PQSRD/Paginas/Inicio.aspx" target="_blank" style="text-decoration: underline; color: #fff;">PQSR y Denuncias</a> |
+              <a href="https://www.dian.gov.co/atencionciudadano/contactenos/Paginas/puntosdecontacto.aspx" target="_blank" style="text-decoration: underline; color: #fff;">Puntos de contacto</a>
+            </p>
+            <p class="mb-1">
+              <a href="https://www.dian.gov.co/Documents/POLITICA_GENERAL_DE_SEGURIDAD_Y_PRIVACIDAD_DE_LA_INFORMACION.pdf" target="_blank" style="text-decoration: underline; color: #fff;">Política de Seguridad de la Información</a><br>
+              <a href="https://www.dian.gov.co/Paginas/Privacidad.aspx" target="_blank" style="text-decoration: underline; color: #fff;">Política de privacidad y Términos de uso</a><br>
+              <a href="https://www.dian.gov.co/normatividad/Normatividad/Circular-000001-de-25-01-2019.pdf" target="_blank" style="text-decoration: underline; color: #fff;">Política de tratamiento de datos personales</a><br>
+              <a href="https://www.dian.gov.co/Paginas/Notificaciones-Judiciales-Formulario.aspx" target="_blank" style="text-decoration: underline; color: #fff;">Notificaciones Judiciales</a> |
+              <a href="#" style="text-decoration: underline; color: #fff;" target="_blank">Mapa del sitio</a>
+            </p>
           </div>
         </div>
       </div>
-    </div>
+    </footer>
   </div>
 {% endif %}
 
